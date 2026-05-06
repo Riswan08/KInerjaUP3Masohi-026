@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Kinerja UP3 Masohi 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2436;
+    --border: #1e3050;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --accent3: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse at 10% 20%, rgba(0,212,170,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(59,130,246,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  header {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header-left {}
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 20px;
+    padding: 4px 12px 4px 4px;
+    margin-bottom: 12px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .logo-badge span { font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #fff;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .subtitle { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .nko-badge {
+    background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(59,130,246,0.1));
+    border: 1px solid rgba(0,212,170,0.4);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: right;
+  }
+  .nko-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+  .nko-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--accent); }
+  .nko-sub { font-size: 11px; color: var(--text-dim); }
+
+  /* MONTH SELECTOR */
+  .month-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .month-btn {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .month-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .month-btn.active { background: var(--accent); border-color: var(--accent); color: #0a0f1e; font-weight: 600; }
+
+  /* SUMMARY CARDS */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .summary-card:hover { transform: translateY(-2px); border-color: var(--accent2); }
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-accent, var(--accent));
+  }
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+  .card-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: #fff; }
+  .card-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+  .badge-green { background: rgba(16,185,129,0.15); color: #10b981; }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+  /* MAIN CHART */
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .chart-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .chart-wrap { position: relative; height: 280px; }
+
+  /* GRID CHARTS */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-card-sm .chart-wrap { height: 200px; }
+
+  /* KPI TABLE */
+  .kpi-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .kpi-table-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .kpi-table-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 10px 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid rgba(30,48,80,0.5); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr.group-row { background: rgba(0,212,170,0.04); }
+  tbody tr.group-row td { font-weight: 600; color: var(--text); }
+  tbody td {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    vertical-align: middle;
+  }
+  .kpi-name { max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .no-cell { color: var(--accent); font-weight: 700; font-size: 12px; }
+
+  .progress-bar-wrap { width: 80px; }
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s;
+  }
+
+  .pct-chip {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .pct-green { background: rgba(16,185,129,0.15); color: #10b981; }
+  .pct-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .pct-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+  /* GAUGE SECTION */
+  .gauges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .gauge-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .gauge-card:hover { transform: translateY(-2px); }
+  .gauge-canvas-wrap { position: relative; height: 100px; margin-bottom: 8px; }
+  .gauge-val {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: #fff;
+  }
+  .gauge-name { font-size: 11px; color: var(--text-dim); line-height: 1.3; }
+  .gauge-bobot { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .gauges-grid { grid-template-columns: repeat(2, 1fr); }
+    header { flex-direction: column; }
+    .header-right { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="logo-badge">
+        <div class="logo-dot"></div>
+        <span>PLN UP3 Masohi · 2026</span>
+      </div>
+      <h1>Dashboard <em>Kinerja</em><br>UP3 Masohi</h1>
+      <p class="subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Mar 2026</p>
+    </div>
+    <div class="header-right">
+      <div class="nko-badge">
+        <div class="nko-label">NKO Aktual</div>
+        <div class="nko-value" id="nko-display">97.23</div>
+        <div class="nko-sub" id="nko-month-label">Maret 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MONTH SELECTOR -->
+  <div class="month-selector">
+    <button class="month-btn" onclick="setMonth(0)">Januari</button>
+    <button class="month-btn" onclick="setMonth(1)">Februari</button>
+    <button class="month-btn active" onclick="setMonth(2)">Maret</button>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="summary-card" style="--card-accent:#00d4aa">
+      <div class="card-label">Total NKO</div>
+      <div class="card-value" id="sum-nko">97.23</div>
+      <div class="card-sub">dari target 110</div>
+      <div class="card-badge badge-yellow" id="sum-nko-badge">▲ Hampir Target</div>
+    </div>
+    <div class="summary-card" style="--card-accent:#3b82f6">
+      <div class="card-label">Indikator Tercapai (≥100%)</div>
+      <div class="card-value" id="sum-tercapai">9</div>
+      <div class="card-sub">dari 12 indikator utama</div>
+      <div class="card-badge badge-green">✓ Baik</div>
+    </div>
+    <div class="summary-card" style="--card-accent:#f59e0b">
+      <div class="card-label">Rata-rata Pencapaian</div>
+      <div class="card-value" id="sum-avg">106.2%</div>
+      <div class="card-sub">pencapaian rata-rata sub-indikator</div>
+      <div class="card-badge badge-green">↑ Di atas target</div>
+    </div>
+    <div class="summary-card" style="--card-accent:#ef4444">
+      <div class="card-label">Perlu Perhatian</div>
+      <div class="card-value" id="sum-perhatian">2</div>
+      <div class="card-sub">indikator di bawah target</div>
+      <div class="card-badge badge-red" id="sum-perhatian-badge">⚠ Perlu Perbaikan</div>
+    </div>
+  </div>
+
+  <!-- NKO TREND CHART -->
+  <p class="section-title">Tren NKO Bulanan</p>
+  <div class="chart-card">
+    <div class="chart-wrap">
+      <canvas id="nkoTrendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- KPI WEIGHT DONUT + ACHIEVEMENT BAR -->
+  <p class="section-title">Bobot & Pencapaian Indikator Utama</p>
+  <div class="charts-grid">
+    <div class="chart-card chart-card-sm">
+      <h3>Distribusi Bobot KPI (%)</h3>
+      <div class="chart-wrap">
+        <canvas id="bobotChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Nilai 110 per Indikator</h3>
+      <div class="chart-wrap">
+        <canvas id="nilai100Chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAUGE CARDS -->
+  <p class="section-title">Pencapaian Sub-Indikator</p>
+  <div class="gauges-grid" id="gauge-grid"></div>
+
+  <!-- INDIVIDUAL CHARTS -->
+  <p class="section-title">Grafik Realisasi vs Target</p>
+  <div class="charts-grid">
+    <div class="chart-card chart-card-sm">
+      <h3>Penjualan Tenaga Listrik (GWh)</h3>
+      <div class="chart-wrap"><canvas id="chartPenjualan"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Susut Distribusi (%)</h3>
+      <div class="chart-wrap"><canvas id="chartSusut"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>SAIDI (menit/pelanggan)</h3>
+      <div class="chart-wrap"><canvas id="chartSAIDI"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>SAIFI (kali/pelanggan)</h3>
+      <div class="chart-wrap"><canvas id="chartSAIFI"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Penambahan Pelanggan</h3>
+      <div class="chart-wrap"><canvas id="chartPelanggan"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Perolehan kWh P2TL</h3>
+      <div class="chart-wrap"><canvas id="chartP2TL"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Penyelesaian Ganti Meter (Unit)</h3>
+      <div class="chart-wrap"><canvas id="chartMeter"></canvas></div>
+    </div>
+    <div class="chart-card chart-card-sm">
+      <h3>Gangguan TM Permanen (Kali)</h3>
+      <div class="chart-wrap"><canvas id="chartGangguan"></canvas></div>
+    </div>
+  </div>
+
+  <!-- KPI TABLE -->
+  <p class="section-title">Tabel Detail Kinerja</p>
+  <div class="kpi-table-wrap">
+    <div class="kpi-table-header">
+      <h3>Rekapitulasi Indikator Kinerja – <span id="table-month-label">Maret 2026</span></h3>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Indikator Kinerja</th>
+            <th>Satuan</th>
+            <th>Bobot</th>
+            <th>Target</th>
+            <th>Realisasi</th>
+            <th>Pencapaian</th>
+            <th>Nilai 110</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="kpi-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<footer>
+  <div class="wrapper">Dashboard Kinerja UP3 Masohi · PT PLN (Persero) · Data 2026</div>
+</footer>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const months = ['Januari', 'Februari', 'Maret'];
+const nkoValues = [103.89, 102.73, 104.08];
+
+// Structured KPI data per month index
+const kpiData = [
+  // idx 0 = Januari, 1 = Februari, 2 = Maret
+  {
+    name: 'Penjualan Tenaga Listrik',
+    no: '1', satuan: 'GWh', bobot: 14,
+    target:  [3.03, 5.28, 8.13],
+    realisasi:[5.47, 9.92, 17.01],
+    pencapaian:[110, 110, 110],
+    nilai100:[15.4, 15.4, 15.4],
+    isGroup: false
+  },
+  {
+    name: 'Susut Distribusi Tanpa E-min',
+    no: '2', satuan: '%', bobot: 12,
+    target:  [7.95, 7.85, 7.76],
+    realisasi:[6.00, 7.89, 6.15],
+    pencapaian:[110, 99.49, 110],
+    nilai100:[13.2, 11.94, 13.2],
+    isGroup: false
+  },
+  {
+    name: 'Keandalan Penyaluran',
+    no: '3', satuan: '', bobot: 12,
+    target:  [null, null, null], realisasi:[null, null, null],
+    pencapaian:[null,null,null],
+    nilai100:[13.2, 13.2, 13.2],
+    isGroup: true
+  },
+  {
+    name: '· SAIDI',
+    no: '3a', satuan: 'menit/plg', bobot: 5,
+    target:  [12.45, 24.9, 37.36],
+    realisasi:[9.01, 18.09, 29.53],
+    pencapaian:[110, 110, 110],
+    nilai100:[5.5, 5.5, 5.5],
+    isGroup: false
+  },
+  {
+    name: '· SAIFI',
+    no: '3b', satuan: 'kali/plg', bobot: 5,
+    target:  [0.24, 0.48, 0.72],
+    realisasi:[0.208, 0.372, 0.587],
+    pencapaian:[110, 110, 110],
+    nilai100:[5.5, 5.5, 5.5],
+    isGroup: false
+  },
+  {
+    name: '· ENS',
+    no: '3c', satuan: 'MWh', bobot: 2,
+    target:  [6.51, 13.02, 19.52],
+    realisasi:[3.39, 7.65, 13.01],
+    pencapaian:[110, 110, 110],
+    nilai100:[2.2, 2.2, 2.2],
+    isGroup: false
+  },
+  {
+    name: 'Penyelesaian Eksekusi RUPTL',
+    no: '4', satuan: '', bobot: 10,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[10, 10, 10],
+    isGroup: true
+  },
+  {
+    name: '· Penambahan Aset RUPTL',
+    no: '4a', satuan: '%', bobot: 5,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[5,5,5],
+    isGroup: false
+  },
+  {
+    name: '· Penambahan Aset Fisik Investasi',
+    no: '4b', satuan: '%', bobot: 5,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[5,5,5],
+    isGroup: false
+  },
+  {
+    name: 'Percepatan Penyambungan Pelanggan',
+    no: '5', satuan: '', bobot: 10,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[8.61, 8.38, 10.19],
+    isGroup: true
+  },
+  {
+    name: '· Jumlah Penambahan Pelanggan',
+    no: '5a', satuan: 'Pelanggan', bobot: 0.5,
+    target:  [221,571,921],
+    realisasi:[322,896,1170],
+    pencapaian:[110,110,110],
+    nilai100:[0.55,0.55,0.55],
+    isGroup: false
+  },
+  {
+    name: '· Penambahan Daya Tersambung',
+    no: '5b', satuan: 'MVA', bobot: 1.5,
+    target:  [3.08,6.31,9.53],
+    realisasi:[0.61,1.37,5.32],
+    pencapaian:[19.75,21.69,55.84],
+    nilai100:[0.30,0.33,0.84],
+    isGroup: false
+  },
+  {
+    name: '· Pendapatan Biaya Penyambungan',
+    no: '5c', satuan: 'Rp Miliar', bobot: 2,
+    target:  [0.88,1.58,1.91],
+    realisasi:[0.51,0.71,3.85],
+    pencapaian:[57.95,44.93,110],
+    nilai100:[1.16,0.90,2.2],
+    isGroup: false
+  },
+  {
+    name: '· Pelanggan Lisdes',
+    no: '5d', satuan: 'Pelanggan', bobot: 4,
+    target:  [0.01,0.01,0.01],
+    realisasi:[46,77,100],
+    pencapaian:[110,110,110],
+    nilai100:[4.4,4.4,4.4],
+    isGroup: false
+  },
+  {
+    name: 'Peningkatan Pelayanan Pelanggan',
+    no: '6', satuan: '', bobot: 8,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[8.04, 8.14, 8.62],
+    isGroup: true
+  },
+  {
+    name: '· Feedback Rating Negatif PLN Mobile',
+    no: '6a', satuan: 'kali', bobot: 2,
+    target:  [2,2,2],
+    realisasi:[0,0,0],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: '· Response Time Gangguan',
+    no: '6b', satuan: 'menit', bobot: 2,
+    target:  [30,30,30],
+    realisasi:[25.33,25.06,24.55],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: '· Success Rate Auto Dispatch',
+    no: '6c', satuan: '%', bobot: 2,
+    target:  [2,2,2],
+    realisasi:[17.93,15.97,14.42],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: 'Keandalan JTM',
+    no: '7', satuan: '', bobot: 7,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[7.7,7.7,7.7],
+    isGroup: true
+  },
+  {
+    name: '· Gangguan TM Permanen',
+    no: '7a', satuan: 'kali', bobot: 5,
+    target:  [133,264,396],
+    realisasi:[45,100,158],
+    pencapaian:[110,110,110],
+    nilai100:[5.5,5.5,5.5],
+    isGroup: false
+  },
+  {
+    name: '· Kerusakan Peralatan PHBTM GD',
+    no: '7b', satuan: 'Unit', bobot: 2,
+    target:  [10,10,10],
+    realisasi:[0,1,2],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: 'Emergency Response Time Distribusi',
+    no: '8', satuan: '', bobot: 6,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[6,6,6],
+    isGroup: true
+  },
+  {
+    name: '· MVOD',
+    no: '8a', satuan: '%', bobot: 4,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[4,4,4],
+    isGroup: false
+  },
+  {
+    name: '· MTTR Siaga 1 TM',
+    no: '8b', satuan: '%', bobot: 2,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[2,2,2],
+    isGroup: false
+  },
+  {
+    name: 'Management Cash In',
+    no: '9', satuan: '', bobot: 6,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[6.2,6.2,4.2],
+    isGroup: true
+  },
+  {
+    name: '· Saldo Rata-rata Akhir Bulan',
+    no: '9a', satuan: 'Rp Juta', bobot: 2,
+    target:  [43.2,43.2,43.2],
+    realisasi:[0,0,0],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: '· Pelunasan PRR',
+    no: '9b', satuan: 'Rp Juta', bobot: 2,
+    target:  [0.01,0.01,101.34],
+    realisasi:[0.01,0.01,0],
+    pencapaian:[100,100,0],
+    nilai100:[2,2,0],
+    isGroup: false
+  },
+  {
+    name: '· Usulan Penghapusan PRR',
+    no: '9c', satuan: '', bobot: 2,
+    target:  [0.01,0.01,0.01],
+    realisasi:[0.01,0.01,0.01],
+    pencapaian:[100,100,100],
+    nilai100:[2,2,2],
+    isGroup: false
+  },
+  {
+    name: 'Pengendalian Anggaran',
+    no: '10', satuan: '', bobot: 5,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[5.2,5.2,5],
+    isGroup: true
+  },
+  {
+    name: '· Anggaran Investasi (RKAP)',
+    no: '10a', satuan: '%', bobot: 2,
+    target:  [100,100,100],
+    realisasi:[100,100,95],
+    pencapaian:[110,110,100],
+    nilai100:[2.2,2.2,2],
+    isGroup: false
+  },
+  {
+    name: '· Usulan Penghapusan ATTB',
+    no: '10b', satuan: 'Rp Juta', bobot: 2,
+    target:  [0.01,0.01,0.01],
+    realisasi:[0.01,0.01,0.01],
+    pencapaian:[100,100,100],
+    nilai100:[2,2,2],
+    isGroup: false
+  },
+  {
+    name: '· Pengendalian NAC',
+    no: '10c', satuan: 'Rp Juta', bobot: 1,
+    target:  [0.01,0.01,0.01],
+    realisasi:[0.01,0.01,0.01],
+    pencapaian:[100,100,100],
+    nilai100:[1,1,1],
+    isGroup: false
+  },
+  {
+    name: 'Pengelolaan Transaksi Energi',
+    no: '11', satuan: '', bobot: 6,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[6.34,6.57,6.57],
+    isGroup: true
+  },
+  {
+    name: '· Perolehan kWh P2TL',
+    no: '11a', satuan: 'kWh', bobot: 3,
+    target:  [188795,377590,566385],
+    realisasi:[190862,411472,617211],
+    pencapaian:[101.09,108.97,108.97],
+    nilai100:[3.04,3.27,3.27],
+    isGroup: false
+  },
+  {
+    name: '· Penyelesaian Ganti Meter',
+    no: '11b', satuan: 'Unit', bobot: 2,
+    target:  [733,1466,2199],
+    realisasi:[1009,2206,3565],
+    pencapaian:[110,110,110],
+    nilai100:[2.2,2.2,2.2],
+    isGroup: false
+  },
+  {
+    name: '· Tindak Lanjut LBKB',
+    no: '11c', satuan: '%', bobot: 1,
+    target:  [99,99,99],
+    realisasi:[100,100,100],
+    pencapaian:[110,110,110],
+    nilai100:[1.1,1.1,1.1],
+    isGroup: false
+  },
+  {
+    name: 'Digitalisasi Aplikasi Korporat',
+    no: '12', satuan: '', bobot: 4,
+    target:  [null,null,null], realisasi:[null,null,null],
+    pencapaian:[null,null,null],
+    nilai100:[4,4,4],
+    isGroup: true
+  },
+  {
+    name: '· Pengembangan Aset Distribusi',
+    no: '12a', satuan: '%', bobot: 2,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[2,2,2],
+    isGroup: false
+  },
+  {
+    name: '· Efektivitas Pemeliharaan',
+    no: '12b', satuan: '%', bobot: 2,
+    target:  [100,100,100],
+    realisasi:[100,100,100],
+    pencapaian:[100,100,100],
+    nilai100:[2,2,2],
+    isGroup: false
+  }
+];
+
+const mainKPIs = [
+  { name: 'Penjualan Tenaga Listrik', bobot: 14, nilai100: [15.4,15.4,15.4] },
+  { name: 'Susut Distribusi', bobot: 12, nilai100: [13.2,11.94,13.2] },
+  { name: 'Keandalan Penyaluran', bobot: 12, nilai100: [13.2,13.2,13.2] },
+  { name: 'Penyelesaian RUPTL', bobot: 10, nilai100: [10,10,10] },
+  { name: 'Percepatan Penyambungan', bobot: 10, nilai100: [8.61,8.38,10.19] },
+  { name: 'Pelayanan Pelanggan', bobot: 8, nilai100: [8.04,8.14,8.62] },
+  { name: 'Keandalan JTM', bobot: 7, nilai100: [7.7,7.7,7.7] },
+  { name: 'ERT Distribusi', bobot: 6, nilai100: [6,6,6] },
+  { name: 'Management Cash In', bobot: 6, nilai100: [6.2,6.2,4.2] },
+  { name: 'Pengendalian Anggaran', bobot: 5, nilai100: [5.2,5.2,5] },
+  { name: 'Transaksi Energi', bobot: 6, nilai100: [6.34,6.57,6.57] },
+  { name: 'Digitalisasi', bobot: 4, nilai100: [4,4,4] },
+];
+
+let currentMonth = 2;
+let charts = {};
+
+const COLORS = {
+  teal: '#00d4aa',
+  blue: '#3b82f6',
+  amber: '#f59e0b',
+  red: '#ef4444',
+  green: '#10b981',
+  purple: '#8b5cf6',
+  pink: '#ec4899',
+  cyan: '#06b6d4',
+  lime: '#84cc16',
+  orange: '#f97316',
+  indigo: '#6366f1',
+  rose: '#f43f5e',
+};
+const colorList = Object.values(COLORS);
+
+function pctColor(pct) {
+  if (pct === null || pct === undefined) return '#64748b';
+  if (pct >= 100) return COLORS.green;
+  if (pct >= 80) return COLORS.amber;
+  return COLORS.red;
+}
+
+function pctClass(pct) {
+  if (pct === null || pct === undefined) return '';
+  if (pct >= 100) return 'pct-green';
+  if (pct >= 80) return 'pct-yellow';
+  return 'pct-red';
+}
+
+function fmt(v, digits=2) {
+  if (v === null || v === undefined || isNaN(v)) return '–';
+  return Number(v).toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:digits});
+}
+
+// ============================================================
+// NKO TREND CHART
+// ============================================================
+function buildNKOChart() {
+  const ctx = document.getElementById('nkoTrendChart').getContext('2d');
+  if (charts.nko) charts.nko.destroy();
+  charts.nko = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'NKO',
+        data: nkoValues,
+        borderColor: COLORS.teal,
+        backgroundColor: 'rgba(0,212,170,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: COLORS.teal,
+        pointRadius: 5,
+        tension: 0.4,
+        fill: true
+      },{
+        label: 'Target (110)',
+        data: [110,110,110],
+        borderColor: 'rgba(0,212,170,0.4)',
+        borderDash: [6,4],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false
+      },{
+        label: 'Nilai 100',
+        data: [100,100,100],
+        borderColor: 'rgba(239,68,68,0.4)',
+        borderDash: [4,3],
+        borderWidth: 1,
+        pointRadius: 0,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#94a3b8', font: { family:'DM Sans', size:12 } } } },
+      scales: {
+        x: { ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } },
+        y: { min: 90, max: 115, ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// BOBOT DONUT CHART
+// ============================================================
+function buildBobotChart() {
+  const ctx = document.getElementById('bobotChart').getContext('2d');
+  if (charts.bobot) charts.bobot.destroy();
+  charts.bobot = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: mainKPIs.map(k => k.name),
+      datasets: [{
+        data: mainKPIs.map(k => k.bobot),
+        backgroundColor: colorList,
+        borderColor: '#111827',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}%` } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// NILAI 100 BAR CHART
+// ============================================================
+function buildNilai100Chart(m) {
+  const ctx = document.getElementById('nilai100Chart').getContext('2d');
+  if (charts.nilai) charts.nilai.destroy();
+  const colors = mainKPIs.map((k,i) => {
+    const ratio = k.nilai100[m] / k.bobot;
+    return ratio >= 1 ? COLORS.green : ratio >= 0.8 ? COLORS.amber : COLORS.red;
+  });
+  charts.nilai = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: mainKPIs.map(k => k.name.length > 18 ? k.name.substring(0,18)+'…' : k.name),
+      datasets: [{
+        label: 'Nilai 110',
+        data: mainKPIs.map(k => k.nilai100[m]),
+        backgroundColor: colors,
+        borderRadius: 4,
+        borderSkipped: false
+      },{
+        label: 'Maks Bobot',
+        data: mainKPIs.map(k => k.bobot),
+        backgroundColor: 'rgba(255,255,255,0.06)',
+        borderColor: 'rgba(255,255,255,0.15)',
+        borderWidth: 1,
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { labels: { color:'#94a3b8', font:{family:'DM Sans', size:11} } }
+      },
+      scales: {
+        x: { ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } },
+        y: { ticks: { color:'#94a3b8', font:{family:'DM Sans', size:10} }, grid: { display:false } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// GAUGE CARDS
+// ============================================================
+function buildGauges(m) {
+  const gaugeData = [
+    { name:'Penjualan TL', pct:110, nilai100: kpiData[0].nilai100[m], bobot:14 },
+    { name:'Susut Distribusi', pct: kpiData[1].pencapaian[m], nilai100: kpiData[1].nilai100[m], bobot:12 },
+    { name:'SAIDI', pct:110, nilai100: kpiData[3].nilai100[m], bobot:5 },
+    { name:'SAIFI', pct:110, nilai100: kpiData[4].nilai100[m], bobot:5 },
+    { name:'ENS', pct:110, nilai100: kpiData[5].nilai100[m], bobot:2 },
+    { name:'Penambahan Pelanggan', pct:110, nilai100: kpiData[10].nilai100[m], bobot:0.5 },
+    { name:'Daya Tersambung', pct: kpiData[11].pencapaian[m], nilai100: kpiData[11].nilai100[m], bobot:1.5 },
+    { name:'Biaya Penyambungan', pct: kpiData[12].pencapaian[m], nilai100: kpiData[12].nilai100[m], bobot:2 },
+    { name:'Pelanggan Lisdes', pct:110, nilai100: kpiData[13].nilai100[m], bobot:4 },
+    { name:'Response Time', pct:110, nilai100: kpiData[16].nilai100[m], bobot:2 },
+    { name:'Auto Dispatch', pct:110, nilai100: kpiData[17].nilai100[m], bobot:2 },
+    { name:'Gangguan TM', pct:110, nilai100: kpiData[19].nilai100[m], bobot:5 },
+    { name:'P2TL kWh', pct: kpiData[33].pencapaian[m], nilai100: kpiData[33].nilai100[m], bobot:3 },
+    { name:'Ganti Meter', pct:110, nilai100: kpiData[34].nilai100[m], bobot:2 },
+    { name:'Pelunasan PRR', pct: kpiData[25].pencapaian[m], nilai100: kpiData[25].nilai100[m], bobot:2 },
+    { name:'Anggaran Inv.', pct: kpiData[28].pencapaian[m], nilai100: kpiData[28].nilai100[m], bobot:2 },
+  ];
+
+  const grid = document.getElementById('gauge-grid');
+  grid.innerHTML = '';
+  const existingGaugeCharts = Object.keys(charts).filter(k => k.startsWith('gauge'));
+  existingGaugeCharts.forEach(k => { charts[k].destroy(); delete charts[k]; });
+
+  gaugeData.forEach((g, i) => {
+    const pct = Math.min(g.pct || 0, 110);
+    const color = pctColor(g.pct);
+
+    const card = document.createElement('div');
+    card.className = 'gauge-card';
+    card.innerHTML = `
+      <div class="gauge-canvas-wrap">
+        <canvas id="gauge-${i}" height="100"></canvas>
+        <div class="gauge-val">${g.pct >= 110 ? '110' : fmt(g.pct,1)}%</div>
+      </div>
+      <div class="gauge-name">${g.name}</div>
+      <div class="gauge-bobot">Bobot: ${g.bobot}</div>
+    `;
+    grid.appendChild(card);
+
+    setTimeout(() => {
+      const ctx2 = document.getElementById(`gauge-${i}`).getContext('2d');
+      const ratio = Math.min(pct/110, 1);
+      charts[`gauge-${i}`] = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [ratio, 1-ratio],
+            backgroundColor: [color, 'rgba(30,48,80,0.4)'],
+            borderWidth: 0,
+            circumference: 180,
+            rotation: 270
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: { legend: { display:false }, tooltip: { enabled:false } }
+        }
+      });
+    }, 10);
+  });
+}
+
+// ============================================================
+// INDIVIDUAL CHARTS
+// ============================================================
+function buildLineChart(id, key, targetKey, realKey, color, labels) {
+  const ctx = document.getElementById(id).getContext('2d');
+  if (charts[id]) charts[id].destroy();
+  const d = kpiData[key];
+  charts[id] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Realisasi',
+          data: d.realisasi,
+          borderColor: color,
+          backgroundColor: color + '22',
+          borderWidth: 2,
+          pointRadius: 5,
+          pointBackgroundColor: color,
+          tension: 0.3,
+          fill: true
+        },
+        {
+          label: 'Target',
+          data: d.target,
+          borderColor: 'rgba(239,68,68,0.6)',
+          borderDash: [5,4],
+          borderWidth: 1.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#ef4444',
+          tension: 0.3,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color:'#94a3b8', font:{family:'DM Sans', size:11} } }
+      },
+      scales: {
+        x: { ticks:{color:'#64748b',font:{family:'DM Sans',size:11}}, grid:{color:'rgba(30,48,80,0.5)'} },
+        y: { ticks:{color:'#64748b',font:{family:'DM Sans',size:11}}, grid:{color:'rgba(30,48,80,0.5)'} }
+      }
+    }
+  });
+}
+
+function buildAllLineCharts() {
+  buildLineChart('chartPenjualan', 0, null, null, COLORS.teal);
+  buildLineChart('chartSusut', 1, null, null, COLORS.amber);
+  buildLineChart('chartSAIDI', 3, null, null, COLORS.blue);
+  buildLineChart('chartSAIFI', 4, null, null, COLORS.purple);
+  buildLineChart('chartPelanggan', 10, null, null, COLORS.green);
+  buildLineChart('chartP2TL', 33, null, null, COLORS.cyan);
+  buildLineChart('chartMeter', 34, null, null, COLORS.orange);
+  buildLineChart('chartGangguan', 19, null, null, COLORS.rose);
+}
+
+// ============================================================
+// KPI TABLE
+// ============================================================
+function buildTable(m) {
+  const tbody = document.getElementById('kpi-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('table-month-label').textContent = months[m] + ' 2026';
+
+  kpiData.forEach(k => {
+    const tr = document.createElement('tr');
+    if (k.isGroup) tr.className = 'group-row';
+
+    const pct = k.pencapaian[m];
+    const n100 = k.nilai100[m];
+    const tar = k.target[m];
+    const real = k.realisasi[m];
+
+    const pctStr = (pct !== null && pct !== undefined && !isNaN(pct))
+      ? `<span class="pct-chip ${pctClass(pct)}">${fmt(pct,1)}%</span>` : '–';
+
+    const barPct = Math.min((pct || 0)/110*100, 100);
+    const barColor = pctColor(pct);
+
+    const progressCell = (pct !== null && pct !== undefined && !isNaN(pct)) ? `
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:${barPct}%;background:${barColor}"></div>
+        </div>
+      </div>` : '–';
+
+    tr.innerHTML = `
+      <td><span class="no-cell">${k.no}</span></td>
+      <td><div class="kpi-name">${k.name}</div></td>
+      <td>${k.satuan || '–'}</td>
+      <td>${k.bobot}</td>
+      <td>${tar !== null && !isNaN(tar) ? fmt(tar) : '–'}</td>
+      <td>${real !== null && !isNaN(real) ? fmt(real) : '–'}</td>
+      <td>${pctStr}</td>
+      <td style="color:#fff;font-weight:600">${n100 !== null && !isNaN(n100) ? fmt(n100,2) : '–'}</td>
+      <td>${progressCell}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ============================================================
+// SUMMARY CARDS
+// ============================================================
+function buildSummaryCards(m) {
+  document.getElementById('sum-nko').textContent = nkoValues[m].toFixed(2);
+  document.getElementById('nko-display').textContent = nkoValues[m].toFixed(2);
+  document.getElementById('nko-month-label').textContent = months[m] + ' 2026';
+
+  const nonGroupItems = kpiData.filter(k => !k.isGroup && k.pencapaian[m] !== null && !isNaN(k.pencapaian[m]));
+  const tercapai = nonGroupItems.filter(k => k.pencapaian[m] >= 100).length;
+  const perhatian = nonGroupItems.filter(k => k.pencapaian[m] < 80).length;
+  const avg = nonGroupItems.reduce((s,k) => s + Math.min(k.pencapaian[m],110), 0) / nonGroupItems.length;
+
+  document.getElementById('sum-tercapai').textContent = tercapai;
+  document.getElementById('sum-avg').textContent = avg.toFixed(1) + '%';
+  document.getElementById('sum-perhatian').textContent = perhatian;
+
+  // Update NKO badge color based on target 110
+  const nko = nkoValues[m];
+  const nkoBadge = document.getElementById('sum-nko-badge');
+  if (nko >= 110) { nkoBadge.className = 'card-badge badge-green'; nkoBadge.textContent = '✓ Melampaui Target 110'; }
+  else if (nko >= 100) { nkoBadge.className = 'card-badge badge-yellow'; nkoBadge.textContent = '▲ Di atas Nilai 100'; }
+  else { nkoBadge.className = 'card-badge badge-red'; nkoBadge.textContent = '▼ Di bawah Target'; }
+}
+
+// ============================================================
+// MONTH SWITCH
+// ============================================================
+function setMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('.month-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === m);
+  });
+  buildSummaryCards(m);
+  buildNilai100Chart(m);
+  buildGauges(m);
+  buildTable(m);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  buildNKOChart();
+  buildBobotChart();
+  buildAllLineCharts();
+  setMonth(2);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
