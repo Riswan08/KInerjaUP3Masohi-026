@@ -22,6 +22,39 @@
     --green: #10b981;
     --yellow: #f59e0b;
     --red: #ef4444;
+    --h1-color: #ffffff;
+    --card-value-color: #ffffff;
+    --gauge-val-color: #ffffff;
+    --table-group-bg: rgba(0,212,170,0.04);
+    --table-hover-bg: rgba(255,255,255,0.02);
+    --table-border: rgba(30,48,80,0.5);
+    --thead-bg: var(--surface2);
+    --glow1: rgba(0,212,170,0.06);
+    --glow2: rgba(59,130,246,0.06);
+    --transition: background 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
+  }
+
+  /* LIGHT THEME */
+  :root.light {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #e8edf3;
+    --border: #d1dce8;
+    --accent: #00a884;
+    --accent2: #2563eb;
+    --accent3: #d97706;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-dim: #475569;
+    --h1-color: #0f172a;
+    --card-value-color: #0f172a;
+    --gauge-val-color: #0f172a;
+    --table-group-bg: rgba(0,168,132,0.06);
+    --table-hover-bg: rgba(0,0,0,0.02);
+    --table-border: rgba(209,220,232,0.8);
+    --thead-bg: #e8edf3;
+    --glow1: rgba(0,168,132,0.08);
+    --glow2: rgba(37,99,235,0.06);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,6 +65,7 @@
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: var(--transition);
   }
 
   /* Animated background */
@@ -40,11 +74,60 @@
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: 
-      radial-gradient(ellipse at 10% 20%, rgba(0,212,170,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 90% 80%, rgba(59,130,246,0.06) 0%, transparent 50%);
+      radial-gradient(ellipse at 10% 20%, var(--glow1) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, var(--glow2) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
+    transition: var(--transition);
   }
+
+  /* THEME TOGGLE */
+  .theme-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .theme-options {
+    display: flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+    transition: var(--transition);
+  }
+  .theme-opt {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .theme-opt:hover { color: var(--accent); }
+  .theme-opt.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,212,170,0.3);
+  }
+  :root.light .theme-opt.active {
+    color: #0a0f1e;
+  }
+  .theme-opt svg { width: 14px; height: 14px; flex-shrink: 0; }
 
   .wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
 
@@ -88,7 +171,8 @@
     font-size: clamp(24px, 4vw, 38px);
     font-weight: 400;
     line-height: 1.1;
-    color: #fff;
+    color: var(--h1-color);
+    transition: var(--transition);
   }
   h1 em { font-style: italic; color: var(--accent); }
 
@@ -152,7 +236,7 @@
     background: var(--card-accent, var(--accent));
   }
   .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
-  .card-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: #fff; }
+  .card-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--card-value-color); transition: var(--transition); }
   .card-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
   .card-badge {
     display: inline-flex;
@@ -172,11 +256,12 @@
   .section-title {
     font-family: 'DM Serif Display', serif;
     font-size: 20px;
-    color: #fff;
+    color: var(--h1-color);
     margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: var(--transition);
   }
   .section-title::after {
     content: '';
@@ -191,6 +276,7 @@
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 24px;
+    transition: var(--transition);
   }
   .chart-card h3 {
     font-size: 14px;
@@ -199,6 +285,7 @@
     margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    transition: var(--transition);
   }
   .chart-wrap { position: relative; height: 280px; }
 
@@ -241,10 +328,10 @@
     background: var(--surface2);
     white-space: nowrap;
   }
-  tbody tr { border-bottom: 1px solid rgba(30,48,80,0.5); transition: background 0.15s; }
+  tbody tr { border-bottom: 1px solid var(--table-border); transition: background 0.15s; }
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(255,255,255,0.02); }
-  tbody tr.group-row { background: rgba(0,212,170,0.04); }
+  tbody tr:hover { background: var(--table-hover-bg); }
+  tbody tr.group-row { background: var(--table-group-bg); }
   tbody tr.group-row td { font-weight: 600; color: var(--text); }
   tbody td {
     padding: 10px 16px;
@@ -302,7 +389,8 @@
     transform: translateX(-50%);
     font-family: 'DM Serif Display', serif;
     font-size: 18px;
-    color: #fff;
+    color: var(--gauge-val-color);
+    transition: var(--transition);
   }
   .gauge-name { font-size: 11px; color: var(--text-dim); line-height: 1.3; }
   .gauge-bobot { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
@@ -338,6 +426,20 @@
       <p class="subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Mar 2026</p>
     </div>
     <div class="header-right">
+      <!-- THEME TOGGLE -->
+      <div class="theme-toggle-wrap">
+        <span class="theme-label">Tema:</span>
+        <div class="theme-options">
+          <button class="theme-opt active" id="btn-dark" onclick="setTheme('dark')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>
+            Gelap
+          </button>
+          <button class="theme-opt" id="btn-light" onclick="setTheme('light')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            Terang
+          </button>
+        </div>
+      </div>
       <div class="nko-badge">
         <div class="nko-label">NKO Aktual</div>
         <div class="nko-value" id="nko-display">97.23</div>
@@ -890,6 +992,7 @@ function fmt(v, digits=2) {
 function buildNKOChart() {
   const ctx = document.getElementById('nkoTrendChart').getContext('2d');
   if (charts.nko) charts.nko.destroy();
+  const c = getChartColors();
   charts.nko = new Chart(ctx, {
     type: 'line',
     data: {
@@ -924,10 +1027,10 @@ function buildNKOChart() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8', font: { family:'DM Sans', size:12 } } } },
+      plugins: { legend: { labels: { color: c.text, font: { family:'DM Sans', size:12 } } } },
       scales: {
-        x: { ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } },
-        y: { min: 90, max: 115, ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } }
+        x: { ticks: { color: c.textMuted, font:{family:'DM Sans'} }, grid: { color: c.grid } },
+        y: { min: 90, max: 115, ticks: { color: c.textMuted, font:{family:'DM Sans'} }, grid: { color: c.grid } }
       }
     }
   });
@@ -967,6 +1070,7 @@ function buildBobotChart() {
 function buildNilai100Chart(m) {
   const ctx = document.getElementById('nilai100Chart').getContext('2d');
   if (charts.nilai) charts.nilai.destroy();
+  const c = getChartColors();
   const colors = mainKPIs.map((k,i) => {
     const ratio = k.nilai100[m] / k.bobot;
     return ratio >= 1 ? COLORS.green : ratio >= 0.8 ? COLORS.amber : COLORS.red;
@@ -995,11 +1099,11 @@ function buildNilai100Chart(m) {
       responsive: true, maintainAspectRatio: false,
       indexAxis: 'y',
       plugins: {
-        legend: { labels: { color:'#94a3b8', font:{family:'DM Sans', size:11} } }
+        legend: { labels: { color: c.text, font:{family:'DM Sans', size:11} } }
       },
       scales: {
-        x: { ticks: { color:'#64748b', font:{family:'DM Sans'} }, grid: { color:'rgba(30,48,80,0.5)' } },
-        y: { ticks: { color:'#94a3b8', font:{family:'DM Sans', size:10} }, grid: { display:false } }
+        x: { ticks: { color: c.textMuted, font:{family:'DM Sans'} }, grid: { color: c.grid } },
+        y: { ticks: { color: c.text, font:{family:'DM Sans', size:10} }, grid: { display:false } }
       }
     }
   });
@@ -1079,6 +1183,7 @@ function buildGauges(m) {
 function buildLineChart(id, key, targetKey, realKey, color, labels) {
   const ctx = document.getElementById(id).getContext('2d');
   if (charts[id]) charts[id].destroy();
+  const c = getChartColors();
   const d = kpiData[key];
   charts[id] = new Chart(ctx, {
     type: 'line',
@@ -1112,11 +1217,11 @@ function buildLineChart(id, key, targetKey, realKey, color, labels) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color:'#94a3b8', font:{family:'DM Sans', size:11} } }
+        legend: { labels: { color: c.text, font:{family:'DM Sans', size:11} } }
       },
       scales: {
-        x: { ticks:{color:'#64748b',font:{family:'DM Sans',size:11}}, grid:{color:'rgba(30,48,80,0.5)'} },
-        y: { ticks:{color:'#64748b',font:{family:'DM Sans',size:11}}, grid:{color:'rgba(30,48,80,0.5)'} }
+        x: { ticks:{color: c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color: c.grid} },
+        y: { ticks:{color: c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color: c.grid} }
       }
     }
   });
@@ -1171,7 +1276,7 @@ function buildTable(m) {
       <td>${tar !== null && !isNaN(tar) ? fmt(tar) : '–'}</td>
       <td>${real !== null && !isNaN(real) ? fmt(real) : '–'}</td>
       <td>${pctStr}</td>
-      <td style="color:#fff;font-weight:600">${n100 !== null && !isNaN(n100) ? fmt(n100,2) : '–'}</td>
+      <td style="color:var(--text);font-weight:600">${n100 !== null && !isNaN(n100) ? fmt(n100,2) : '–'}</td>
       <td>${progressCell}</td>
     `;
     tbody.appendChild(tr);
@@ -1204,6 +1309,42 @@ function buildSummaryCards(m) {
 }
 
 // ============================================================
+// THEME SWITCH
+// ============================================================
+function getChartColors() {
+  const isLight = document.documentElement.classList.contains('light');
+  return {
+    text: isLight ? '#475569' : '#94a3b8',
+    textMuted: isLight ? '#64748b' : '#64748b',
+    grid: isLight ? 'rgba(209,220,232,0.7)' : 'rgba(30,48,80,0.5)',
+    surface: isLight ? '#ffffff' : '#111827',
+    accent: isLight ? '#00a884' : '#00d4aa',
+  };
+}
+
+function refreshAllCharts() {
+  buildNKOChart();
+  buildBobotChart();
+  buildAllLineCharts();
+  buildNilai100Chart(currentMonth);
+  buildGauges(currentMonth);
+}
+
+function setTheme(mode) {
+  const root = document.documentElement;
+  if (mode === 'light') {
+    root.classList.add('light');
+  } else {
+    root.classList.remove('light');
+  }
+  document.getElementById('btn-dark').classList.toggle('active', mode === 'dark');
+  document.getElementById('btn-light').classList.toggle('active', mode === 'light');
+  localStorage.setItem('dashTheme', mode);
+  // Rebuild all charts with new colors
+  setTimeout(refreshAllCharts, 50);
+}
+
+// ============================================================
 // MONTH SWITCH
 // ============================================================
 function setMonth(m) {
@@ -1221,6 +1362,13 @@ function setMonth(m) {
 // INIT
 // ============================================================
 function init() {
+  // Restore saved theme
+  const savedTheme = localStorage.getItem('dashTheme') || 'dark';
+  if (savedTheme === 'light') {
+    document.documentElement.classList.add('light');
+    document.getElementById('btn-dark').classList.remove('active');
+    document.getElementById('btn-light').classList.add('active');
+  }
   buildNKOChart();
   buildBobotChart();
   buildAllLineCharts();
