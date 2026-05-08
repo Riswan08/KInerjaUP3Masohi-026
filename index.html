@@ -217,6 +217,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 32px;
+    align-items: start;
   }
   .summary-card {
     background: var(--surface);
@@ -366,6 +367,101 @@
   .pct-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
   .pct-red { background: rgba(239,68,68,0.15); color: #ef4444; }
 
+  .perhatian-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 7px;
+    padding: 5px 8px;
+    gap: 6px;
+  }
+  .perhatian-item-name {
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .perhatian-item-pct {
+    font-size: 12px; font-weight: 800;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .perhatian-item-bar {
+    width: 100%; height: 3px;
+    background: var(--border); border-radius: 2px; overflow: hidden;
+    margin-top: 3px;
+  }
+  .perhatian-item-bar-fill { height: 100%; border-radius: 2px; }
+
+  .perhatian-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 7px;
+    padding: 5px 8px;
+  }
+  .perhatian-item-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .perhatian-item-pct {
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .perhatian-item-bar {
+    width: 100%;
+    height: 3px;
+    background: rgba(239,68,68,0.15);
+    border-radius: 2px;
+    margin-top: 3px;
+    overflow: hidden;
+  }
+  .perhatian-item-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  /* PERBAIKAN CARDS */
+  .perbaikan-card {
+    background: var(--surface);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-left: 4px solid #ef4444;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.2s, background 0.35s;
+  }
+  .perbaikan-card:hover { transform: translateY(-2px); }
+  .perbaikan-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(239,68,68,0.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .perbaikan-body { flex: 1; min-width: 0; }
+  .perbaikan-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .perbaikan-meta { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .perbaikan-pct { font-family: 'DM Serif Display', serif; font-size: 24px; color: #f87171; }
+  .perbaikan-vals { font-size: 10.5px; color: var(--text-muted); line-height: 1.7; }
+  .perbaikan-vals b { color: var(--text); font-weight: 700; }
+  .pb-bar-wrap { width: 100%; height: 5px; background: var(--border); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  .pb-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
   /* GAUGE SECTION */
   .speedometers-grid {
     display: grid;
@@ -480,11 +576,13 @@
       <div class="card-sub">pencapaian rata-rata sub-indikator</div>
       <div class="card-badge badge-green">↑ Di atas target</div>
     </div>
-    <div class="summary-card" style="--card-accent:#ef4444">
-      <div class="card-label">Perlu Perhatian</div>
-      <div class="card-value" id="sum-perhatian">2</div>
-      <div class="card-sub">indikator di bawah target</div>
-      <div class="card-badge badge-red" id="sum-perhatian-badge">⚠ Perlu Perbaikan</div>
+    <div class="summary-card" style="--card-accent:#ef4444;min-width:0">
+      <div class="card-label">⚠ Perlu Perhatian</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+        <div class="card-value" id="sum-perhatian">0</div>
+        <div class="card-sub" style="margin:0">indikator &lt; 100%</div>
+      </div>
+      <div id="perhatian-list" style="margin-top:8px;display:flex;flex-direction:column;gap:5px"></div>
     </div>
   </div>
 
@@ -545,7 +643,7 @@
       <div class="chart-wrap"><canvas id="chartP2TL"></canvas></div>
     </div>
     <div class="chart-card chart-card-sm">
-      <h3>Penyelesaian Ganti Meter (Unit)</h3>
+      <h3>Penambahan Daya Tersambung (MVA)</h3>
       <div class="chart-wrap"><canvas id="chartMeter"></canvas></div>
     </div>
     <div class="chart-card chart-card-sm">
@@ -1276,6 +1374,10 @@ function buildLineChart(id, key, targetKey, realKey, color, labels) {
   if (charts[id]) charts[id].destroy();
   const c = getChartColors();
   const d = kpiData[key];
+  // Check if values are large (>= 1000) to format ticks
+  const maxVal = Math.max(...d.realisasi.filter(v=>v!==null), ...d.target.filter(v=>v!==null));
+  const isLarge = maxVal >= 1000;
+
   charts[id] = new Chart(ctx, {
     type: 'line',
     data: {
@@ -1308,25 +1410,37 @@ function buildLineChart(id, key, targetKey, realKey, color, labels) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: c.text, font:{family:'DM Sans', size:11} } }
+        legend: { labels: { color: c.text, font:{family:'DM Sans', size:11} } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${isLarge ? ctx.raw.toLocaleString('id-ID') : ctx.raw}`
+          }
+        }
       },
       scales: {
         x: { ticks:{color: c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color: c.grid} },
-        y: { ticks:{color: c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color: c.grid} }
+        y: {
+          ticks:{
+            color: c.textMuted,
+            font:{family:'DM Sans',size:11},
+            callback: v => isLarge ? v.toLocaleString('id-ID') : v
+          },
+          grid:{color: c.grid}
+        }
       }
     }
   });
 }
 
 function buildAllLineCharts() {
-  buildLineChart('chartPenjualan', 0, null, null, COLORS.teal);
-  buildLineChart('chartSusut', 1, null, null, COLORS.amber);
-  buildLineChart('chartSAIDI', 3, null, null, COLORS.blue);
-  buildLineChart('chartSAIFI', 4, null, null, COLORS.purple);
+  buildLineChart('chartPenjualan', 0,  null, null, COLORS.teal);
+  buildLineChart('chartSusut',     1,  null, null, COLORS.amber);
+  buildLineChart('chartSAIDI',     3,  null, null, COLORS.blue);
+  buildLineChart('chartSAIFI',     4,  null, null, COLORS.purple);
   buildLineChart('chartPelanggan', 10, null, null, COLORS.green);
-  buildLineChart('chartP2TL', 33, null, null, COLORS.cyan);
-  buildLineChart('chartMeter', 34, null, null, COLORS.orange);
-  buildLineChart('chartGangguan', 19, null, null, COLORS.rose);
+  buildLineChart('chartP2TL',      36, null, null, COLORS.cyan);
+  buildLineChart('chartMeter',     11, null, null, COLORS.orange);
+  buildLineChart('chartGangguan',  21, null, null, COLORS.rose);
 }
 
 // ============================================================
@@ -1383,20 +1497,54 @@ function buildSummaryCards(m) {
   document.getElementById('nko-month-label').textContent = months[m] + ' 2026';
 
   const nonGroupItems = kpiData.filter(k => !k.isGroup && k.pencapaian[m] !== null && !isNaN(k.pencapaian[m]));
-  const tercapai = nonGroupItems.filter(k => k.pencapaian[m] >= 100).length;
-  const perhatian = nonGroupItems.filter(k => k.pencapaian[m] < 80).length;
+  const tercapai  = nonGroupItems.filter(k => k.pencapaian[m] >= 100).length;
+  const perhatian = nonGroupItems.filter(k => k.pencapaian[m] < 100);
   const avg = nonGroupItems.reduce((s,k) => s + Math.min(k.pencapaian[m],110), 0) / nonGroupItems.length;
 
   document.getElementById('sum-tercapai').textContent = tercapai;
   document.getElementById('sum-avg').textContent = avg.toFixed(1) + '%';
-  document.getElementById('sum-perhatian').textContent = perhatian;
+  document.getElementById('sum-perhatian').textContent = perhatian.length;
 
-  // Update NKO badge color based on target 110
+  // NKO badge
   const nko = nkoValues[m];
   const nkoBadge = document.getElementById('sum-nko-badge');
   if (nko >= 110) { nkoBadge.className = 'card-badge badge-green'; nkoBadge.textContent = '✓ Melampaui Target 110'; }
   else if (nko >= 100) { nkoBadge.className = 'card-badge badge-yellow'; nkoBadge.textContent = '▲ Di atas Nilai 100'; }
   else { nkoBadge.className = 'card-badge badge-red'; nkoBadge.textContent = '▼ Di bawah Target'; }
+
+  // Populate perhatian list — sorted lowest first
+  const list = document.getElementById('perhatian-list');
+  list.innerHTML = '';
+
+  if (perhatian.length === 0) {
+    list.innerHTML = `<div style="font-size:10px;color:var(--text-muted);padding:4px 2px">✅ Semua indikator tercapai</div>`;
+    return;
+  }
+
+  perhatian
+    .sort((a,b) => a.pencapaian[m] - b.pencapaian[m])
+    .forEach(k => {
+      const pct = k.pencapaian[m];
+      const clr = pct < 50 ? '#ef4444' : pct < 80 ? '#f97316' : '#f59e0b';
+      const fv  = v => (v !== null && v !== undefined && !isNaN(v)) ? fmt(v,2) : '–';
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <div class="perhatian-item">
+          <div class="perhatian-item-name" title="${k.name}">${k.name}</div>
+          <div class="perhatian-item-pct" style="color:${clr}">${pct.toFixed(1)}%</div>
+        </div>
+        <div style="padding:1px 8px 4px">
+          <div class="perhatian-item-bar">
+            <div class="perhatian-item-bar-fill" style="width:${Math.max(pct,0).toFixed(1)}%;background:${clr}"></div>
+          </div>
+          <div style="font-size:9px;color:var(--text-muted);margin-top:2px;display:flex;justify-content:space-between">
+            <span>Target: <b style="color:var(--text)">${fv(k.target[m])} ${k.satuan}</b></span>
+            <span>Realisasi: <b style="color:${clr}">${fv(k.realisasi[m])} ${k.satuan}</b></span>
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
 }
 
 // ============================================================
