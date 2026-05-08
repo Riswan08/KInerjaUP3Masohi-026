@@ -427,7 +427,7 @@
         <span>PLN UP3 Masohi · 2026</span>
       </div>
       <h1>Dashboard <em>Kinerja</em><br>UP3 Masohi</h1>
-      <p class="subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Mar 2026</p>
+      <p class="subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Apr 2026</p>
     </div>
     <div class="header-right">
       <!-- THEME TOGGLE -->
@@ -456,7 +456,8 @@
   <div class="month-selector">
     <button class="month-btn" onclick="setMonth(0)">Januari</button>
     <button class="month-btn" onclick="setMonth(1)">Februari</button>
-    <button class="month-btn active" onclick="setMonth(2)">Maret</button>
+    <button class="month-btn" onclick="setMonth(2)">Maret</button>
+    <button class="month-btn active" onclick="setMonth(3)">April</button>
   </div>
 
   <!-- SUMMARY CARDS -->
@@ -588,371 +589,389 @@
 // ============================================================
 // DATA
 // ============================================================
-const months = ['Januari', 'Februari', 'Maret'];
-const nkoValues = [103.89, 102.73, 104.08];
+const months = ['Januari', 'Februari', 'Maret', 'April'];
+const nkoValues = [104.09, 103.30, 104.15, 106.79];
 
 // Structured KPI data per month index
+// idx 0=Januari, 1=Februari, 2=Maret, 3=April
 const kpiData = [
-  // idx 0 = Januari, 1 = Februari, 2 = Maret
   {
     name: 'Penjualan Tenaga Listrik',
     no: '1', satuan: 'GWh', bobot: 14,
-    target:  [3.03, 5.28, 8.13],
-    realisasi:[5.47, 9.92, 17.01],
-    pencapaian:[110, 110, 110],
-    nilai100:[15.4, 15.4, 15.4],
+    target:     [2.6,    5.2,    7.8,    10.4],
+    realisasi:  [5.47,   9.92,   17.01,  21.32],
+    pencapaian: [110,    110,    110,    110],
+    nilai100:   [15.4,   15.4,   15.4,   15.4],
     isGroup: false
   },
   {
     name: 'Susut Distribusi Tanpa E-min',
     no: '2', satuan: '%', bobot: 12,
-    target:  [7.95, 7.85, 7.76],
-    realisasi:[6.00, 7.89, 6.15],
-    pencapaian:[110, 99.49, 110],
-    nilai100:[13.2, 11.94, 13.2],
+    target:     [7.95,   7.85,   7.76,   7.67],
+    realisasi:  [6.00,   7.89,   6.15,   6.21],
+    pencapaian: [110,    99.49,  110,    110],
+    nilai100:   [13.2,   11.94,  13.2,   13.2],
     isGroup: false
   },
   {
     name: 'Keandalan Penyaluran',
     no: '3', satuan: '', bobot: 12,
-    target:  [null, null, null], realisasi:[null, null, null],
-    pencapaian:[null,null,null],
-    nilai100:[13.2, 13.2, 13.2],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [13.2, 13.2, 13.2, 13.2],
     isGroup: true
   },
   {
     name: '· SAIDI',
     no: '3a', satuan: 'menit/plg', bobot: 5,
-    target:  [12.45, 24.9, 37.36],
-    realisasi:[9.01, 18.09, 29.53],
-    pencapaian:[110, 110, 110],
-    nilai100:[5.5, 5.5, 5.5],
+    target:     [12.45,  24.9,   37.36,  49.81],
+    realisasi:  [9.01,   18.09,  29.53,  40.53],
+    pencapaian: [110,    110,    110,    110],
+    nilai100:   [5.5,    5.5,    5.5,    5.5],
     isGroup: false
   },
   {
     name: '· SAIFI',
     no: '3b', satuan: 'kali/plg', bobot: 5,
-    target:  [0.24, 0.48, 0.72],
-    realisasi:[0.208, 0.372, 0.587],
-    pencapaian:[110, 110, 110],
-    nilai100:[5.5, 5.5, 5.5],
+    target:     [0.24,   0.48,   0.72,   0.96],
+    realisasi:  [0.208,  0.372,  0.587,  0.77],
+    pencapaian: [110,    110,    110,    110],
+    nilai100:   [5.5,    5.5,    5.5,    5.5],
     isGroup: false
   },
   {
     name: '· ENS',
     no: '3c', satuan: 'MWh', bobot: 2,
-    target:  [6.51, 13.02, 19.52],
-    realisasi:[3.39, 7.65, 13.01],
-    pencapaian:[110, 110, 110],
-    nilai100:[2.2, 2.2, 2.2],
+    target:     [6.51,   13.02,  19.52,  26.03],
+    realisasi:  [3.39,   7.65,   13.01,  19.11],
+    pencapaian: [110,    110,    110,    110],
+    nilai100:   [2.2,    2.2,    2.2,    2.2],
     isGroup: false
   },
   {
     name: 'Penyelesaian Eksekusi RUPTL',
     no: '4', satuan: '', bobot: 10,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[10, 10, 10],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [10, 10, 10, 10],
     isGroup: true
   },
   {
     name: '· Penambahan Aset RUPTL',
     no: '4a', satuan: '%', bobot: 5,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[5,5,5],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [5,5,5,5],
     isGroup: false
   },
   {
     name: '· Penambahan Aset Fisik Investasi',
     no: '4b', satuan: '%', bobot: 5,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[5,5,5],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [5,5,5,5],
     isGroup: false
   },
   {
     name: 'Percepatan Penyambungan Pelanggan',
     no: '5', satuan: '', bobot: 10,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[8.61, 8.38, 10.19],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [8.61, 8.85, 10.19, 10.49],
     isGroup: true
   },
   {
     name: '· Jumlah Penambahan Pelanggan',
     no: '5a', satuan: 'Pelanggan', bobot: 0.5,
-    target:  [221,571,921],
-    realisasi:[322,896,1170],
-    pencapaian:[110,110,110],
-    nilai100:[0.55,0.55,0.55],
+    target:     [221,   571,    921,    1062],
+    realisasi:  [322,   896,    1170,   1432],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [0.55,  0.55,   0.55,   0.55],
     isGroup: false
   },
   {
     name: '· Penambahan Daya Tersambung',
     no: '5b', satuan: 'MVA', bobot: 1.5,
-    target:  [3.08,6.31,9.53],
-    realisasi:[0.61,1.37,5.32],
-    pencapaian:[19.75,21.69,55.84],
-    nilai100:[0.30,0.33,0.84],
+    target:     [3.08,  6.31,   9.53,   9.91],
+    realisasi:  [0.61,  1.37,   5.32,   8.80],
+    pencapaian: [19.73, 21.70,  55.84,  88.79],
+    nilai100:   [0.30,  0.33,   0.84,   1.34],
     isGroup: false
   },
   {
     name: '· Pendapatan Biaya Penyambungan',
     no: '5c', satuan: 'Rp Miliar', bobot: 2,
-    target:  [0.88,1.58,1.91],
-    realisasi:[0.51,0.71,3.85],
-    pencapaian:[57.95,44.93,110],
-    nilai100:[1.16,0.90,2.2],
+    target:     [0.88,  1.58,   1.91,   2.50],
+    realisasi:  [0.51,  1.08,   3.85,   5.00],
+    pencapaian: [57.95, 68.35,  110,    110],
+    nilai100:   [1.16,  1.37,   2.2,    2.2],
     isGroup: false
   },
   {
     name: '· Pelanggan Lisdes',
     no: '5d', satuan: 'Pelanggan', bobot: 4,
-    target:  [0.01,0.01,0.01],
-    realisasi:[46,77,100],
-    pencapaian:[110,110,110],
-    nilai100:[4.4,4.4,4.4],
+    target:     [0.01,  0.01,   0.01,   16],
+    realisasi:  [46,    77,     100,    100],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [4.4,   4.4,    4.4,    4.4],
+    isGroup: false
+  },
+  {
+    name: '· kWh Penjualan Pelanggan Lisdes',
+    no: '5e', satuan: 'kWh', bobot: 2,
+    target:     [0.01,  0.01,   0.01,   1086],
+    realisasi:  [850,   2452,   5576,   1086],
+    pencapaian: [110,   110,    110,    100],
+    nilai100:   [2.2,   2.2,    2.2,    2.0],
     isGroup: false
   },
   {
     name: 'Peningkatan Pelayanan Pelanggan',
     no: '6', satuan: '', bobot: 8,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[8.04, 8.14, 8.62],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [8.24, 8.24, 8.69, 8.80],
     isGroup: true
   },
   {
     name: '· Feedback Rating Negatif PLN Mobile',
     no: '6a', satuan: 'kali', bobot: 2,
-    target:  [2,2,2],
-    realisasi:[0,0,0],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [2,2,2,2],
+    realisasi:  [0,0,0,0],
+    pencapaian: [110,110,110,110],
+    nilai100:   [2.2,2.2,2.2,2.2],
     isGroup: false
   },
   {
     name: '· Response Time Gangguan',
     no: '6b', satuan: 'menit', bobot: 2,
-    target:  [30,30,30],
-    realisasi:[25.33,25.06,24.55],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [30,    30,     30,     30],
+    realisasi:  [25.33, 25.06,  24.55,  24.58],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [2.2,   2.2,    2.2,    2.2],
     isGroup: false
   },
   {
     name: '· Success Rate Auto Dispatch',
     no: '6c', satuan: '%', bobot: 2,
-    target:  [2,2,2],
-    realisasi:[17.93,15.97,14.42],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [2,     2,      2,      2],
+    realisasi:  [17.93, 15.97,  14.42,  13.43],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [2.2,   2.2,    2.2,    2.2],
+    isGroup: false
+  },
+  {
+    name: '· Transaksi Keuangan PLN Mobile',
+    no: '6d', satuan: 'Transaksi', bobot: 2,
+    target:     [4928,  9791,   14700,  20643],
+    realisasi:  [7065,  13057,  21831,  34023],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [1.64,  1.64,   2.09,   2.2],
     isGroup: false
   },
   {
     name: 'Keandalan JTM',
     no: '7', satuan: '', bobot: 7,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[7.7,7.7,7.7],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [7.7,7.7,7.7,7.7],
     isGroup: true
   },
   {
     name: '· Gangguan TM Permanen',
     no: '7a', satuan: 'kali', bobot: 5,
-    target:  [133,264,396],
-    realisasi:[45,100,158],
-    pencapaian:[110,110,110],
-    nilai100:[5.5,5.5,5.5],
+    target:     [133,   264,    396,    523],
+    realisasi:  [45,    100,    158,    243],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [5.5,   5.5,    5.5,    5.5],
     isGroup: false
   },
   {
     name: '· Kerusakan Peralatan PHBTM GD',
     no: '7b', satuan: 'Unit', bobot: 2,
-    target:  [10,10,10],
-    realisasi:[0,1,2],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [10,10,10,14],
+    realisasi:  [0,1,2,4],
+    pencapaian: [110,110,110,110],
+    nilai100:   [2.2,2.2,2.2,2.2],
     isGroup: false
   },
   {
     name: 'Emergency Response Time Distribusi',
     no: '8', satuan: '', bobot: 6,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[6,6,6],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [6,6,6,6],
     isGroup: true
   },
   {
     name: '· MVOD',
     no: '8a', satuan: '%', bobot: 4,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[4,4,4],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [4,4,4,4],
     isGroup: false
   },
   {
     name: '· MTTR Siaga 1 TM',
     no: '8b', satuan: '%', bobot: 2,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[2,2,2],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [2,2,2,2],
     isGroup: false
   },
   {
     name: 'Management Cash In',
     no: '9', satuan: '', bobot: 6,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[6.2,6.2,4.2],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [6.2, 6.2, 4.2, 6.4],
     isGroup: true
   },
   {
     name: '· Saldo Rata-rata Akhir Bulan',
     no: '9a', satuan: 'Rp Juta', bobot: 2,
-    target:  [43.2,43.2,43.2],
-    realisasi:[0,0,0],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [43.2,  43.2,   43.2,   43.2],
+    realisasi:  [0,     0,      0,      0],
+    pencapaian: [110,   110,    110,    110],
+    nilai100:   [2.2,   2.2,    2.2,    2.2],
     isGroup: false
   },
   {
     name: '· Pelunasan PRR',
     no: '9b', satuan: 'Rp Juta', bobot: 2,
-    target:  [0.01,0.01,101.34],
-    realisasi:[0.01,0.01,0],
-    pencapaian:[100,100,0],
-    nilai100:[2,2,0],
+    target:     [0.01,  0.01,   101.34, 135.42],
+    realisasi:  [0.01,  0.01,   0,      583.77],
+    pencapaian: [100,   100,    0,      110],
+    nilai100:   [2,     2,      0,      2.2],
     isGroup: false
   },
   {
     name: '· Usulan Penghapusan PRR',
     no: '9c', satuan: '', bobot: 2,
-    target:  [0.01,0.01,0.01],
-    realisasi:[0.01,0.01,0.01],
-    pencapaian:[100,100,100],
-    nilai100:[2,2,2],
+    target:     [0.01,0.01,0.01,0.01],
+    realisasi:  [0.01,0.01,0.01,0.01],
+    pencapaian: [100,100,100,100],
+    nilai100:   [2,2,2,2],
     isGroup: false
   },
   {
     name: 'Pengendalian Anggaran',
     no: '10', satuan: '', bobot: 5,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[5.2,5.2,5],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [5.2, 5.2, 5, 5],
     isGroup: true
   },
   {
     name: '· Anggaran Investasi (RKAP)',
     no: '10a', satuan: '%', bobot: 2,
-    target:  [100,100,100],
-    realisasi:[100,100,95],
-    pencapaian:[110,110,100],
-    nilai100:[2.2,2.2,2],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,95,95],
+    pencapaian: [110,110,100,100],
+    nilai100:   [2.2,2.2,2,2],
     isGroup: false
   },
   {
     name: '· Usulan Penghapusan ATTB',
     no: '10b', satuan: 'Rp Juta', bobot: 2,
-    target:  [0.01,0.01,0.01],
-    realisasi:[0.01,0.01,0.01],
-    pencapaian:[100,100,100],
-    nilai100:[2,2,2],
+    target:     [0.01,0.01,0.01,0.01],
+    realisasi:  [0.01,0.01,0.01,0.01],
+    pencapaian: [100,100,100,100],
+    nilai100:   [2,2,2,2],
     isGroup: false
   },
   {
     name: '· Pengendalian NAC',
     no: '10c', satuan: 'Rp Juta', bobot: 1,
-    target:  [0.01,0.01,0.01],
-    realisasi:[0.01,0.01,0.01],
-    pencapaian:[100,100,100],
-    nilai100:[1,1,1],
+    target:     [0.01,0.01,0.01,0.01],
+    realisasi:  [0.01,0.01,0.01,0.01],
+    pencapaian: [100,100,100,100],
+    nilai100:   [1,1,1,1],
     isGroup: false
   },
   {
     name: 'Pengelolaan Transaksi Energi',
     no: '11', satuan: '', bobot: 6,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[6.34,6.57,6.57],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [6.34, 6.57, 6.57, 6.60],
     isGroup: true
   },
   {
     name: '· Perolehan kWh P2TL',
     no: '11a', satuan: 'kWh', bobot: 3,
-    target:  [188795,377590,566385],
-    realisasi:[190862,411472,617211],
-    pencapaian:[101.09,108.97,108.97],
-    nilai100:[3.04,3.27,3.27],
+    target:     [188795, 377590, 566385, 755180],
+    realisasi:  [190862, 411472, 617211, 865078],
+    pencapaian: [101.09, 108.97, 108.97, 110],
+    nilai100:   [3.04,   3.27,   3.27,   3.30],
     isGroup: false
   },
   {
     name: '· Penyelesaian Ganti Meter',
     no: '11b', satuan: 'Unit', bobot: 2,
-    target:  [733,1466,2199],
-    realisasi:[1009,2206,3565],
-    pencapaian:[110,110,110],
-    nilai100:[2.2,2.2,2.2],
+    target:     [733,  1466,  2199,  2932],
+    realisasi:  [1009, 2206,  3565,  5915],
+    pencapaian: [110,  110,   110,   110],
+    nilai100:   [2.2,  2.2,   2.2,   2.2],
     isGroup: false
   },
   {
     name: '· Tindak Lanjut LBKB',
     no: '11c', satuan: '%', bobot: 1,
-    target:  [99,99,99],
-    realisasi:[100,100,100],
-    pencapaian:[110,110,110],
-    nilai100:[1.1,1.1,1.1],
+    target:     [99,99,99,99],
+    realisasi:  [100,100,100,100],
+    pencapaian: [110,110,110,110],
+    nilai100:   [1.1,1.1,1.1,1.1],
     isGroup: false
   },
   {
     name: 'Digitalisasi Aplikasi Korporat',
     no: '12', satuan: '', bobot: 4,
-    target:  [null,null,null], realisasi:[null,null,null],
-    pencapaian:[null,null,null],
-    nilai100:[4,4,4],
+    target:     [null,null,null,null], realisasi:[null,null,null,null],
+    pencapaian: [null,null,null,null],
+    nilai100:   [4,4,4,4],
     isGroup: true
   },
   {
     name: '· Pengembangan Aset Distribusi',
     no: '12a', satuan: '%', bobot: 2,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[2,2,2],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [2,2,2,2],
     isGroup: false
   },
   {
     name: '· Efektivitas Pemeliharaan',
     no: '12b', satuan: '%', bobot: 2,
-    target:  [100,100,100],
-    realisasi:[100,100,100],
-    pencapaian:[100,100,100],
-    nilai100:[2,2,2],
+    target:     [100,100,100,100],
+    realisasi:  [100,100,100,100],
+    pencapaian: [100,100,100,100],
+    nilai100:   [2,2,2,2],
     isGroup: false
   }
 ];
 
 const mainKPIs = [
-  { name: 'Penjualan Tenaga Listrik', bobot: 14, nilai100: [15.4,15.4,15.4] },
-  { name: 'Susut Distribusi', bobot: 12, nilai100: [13.2,11.94,13.2] },
-  { name: 'Keandalan Penyaluran', bobot: 12, nilai100: [13.2,13.2,13.2] },
-  { name: 'Penyelesaian RUPTL', bobot: 10, nilai100: [10,10,10] },
-  { name: 'Percepatan Penyambungan', bobot: 10, nilai100: [8.61,8.38,10.19] },
-  { name: 'Pelayanan Pelanggan', bobot: 8, nilai100: [8.04,8.14,8.62] },
-  { name: 'Keandalan JTM', bobot: 7, nilai100: [7.7,7.7,7.7] },
-  { name: 'ERT Distribusi', bobot: 6, nilai100: [6,6,6] },
-  { name: 'Management Cash In', bobot: 6, nilai100: [6.2,6.2,4.2] },
-  { name: 'Pengendalian Anggaran', bobot: 5, nilai100: [5.2,5.2,5] },
-  { name: 'Transaksi Energi', bobot: 6, nilai100: [6.34,6.57,6.57] },
-  { name: 'Digitalisasi', bobot: 4, nilai100: [4,4,4] },
+  { name: 'Penjualan Tenaga Listrik', bobot: 14, nilai100: [15.4,  15.4,  15.4,  15.4]  },
+  { name: 'Susut Distribusi',         bobot: 12, nilai100: [13.2,  11.94, 13.2,  13.2]  },
+  { name: 'Keandalan Penyaluran',     bobot: 12, nilai100: [13.2,  13.2,  13.2,  13.2]  },
+  { name: 'Penyelesaian RUPTL',       bobot: 10, nilai100: [10,    10,    10,    10]     },
+  { name: 'Percepatan Penyambungan',  bobot: 10, nilai100: [8.61,  8.85,  10.19, 10.49] },
+  { name: 'Pelayanan Pelanggan',      bobot: 8,  nilai100: [8.24,  8.24,  8.69,  8.80]  },
+  { name: 'Keandalan JTM',            bobot: 7,  nilai100: [7.7,   7.7,   7.7,   7.7]   },
+  { name: 'ERT Distribusi',           bobot: 6,  nilai100: [6,     6,     6,     6]     },
+  { name: 'Management Cash In',       bobot: 6,  nilai100: [6.2,   6.2,   4.2,   6.4]   },
+  { name: 'Pengendalian Anggaran',    bobot: 5,  nilai100: [5.2,   5.2,   5,     5]     },
+  { name: 'Transaksi Energi',         bobot: 6,  nilai100: [6.34,  6.57,  6.57,  6.60]  },
+  { name: 'Digitalisasi',             bobot: 4,  nilai100: [4,     4,     4,     4]     },
 ];
 
-let currentMonth = 2;
+let currentMonth = 3;
 let charts = {};
 
 const COLORS = {
@@ -1013,7 +1032,7 @@ function buildNKOChart() {
         fill: true
       },{
         label: 'Target (110)',
-        data: [110,110,110],
+        data: [110,110,110,110],
         borderColor: 'rgba(0,212,170,0.4)',
         borderDash: [6,4],
         borderWidth: 1.5,
@@ -1021,7 +1040,7 @@ function buildNKOChart() {
         fill: false
       },{
         label: 'Nilai 100',
-        data: [100,100,100],
+        data: [100,100,100,100],
         borderColor: 'rgba(239,68,68,0.4)',
         borderDash: [4,3],
         borderWidth: 1,
@@ -1218,13 +1237,15 @@ function buildGauges(m) {
     { name:'Penambahan Daya Tersambung',   satuan:'MVA',       pct:kpiData[11].pencapaian[m], target:kpiData[11].target[m], realisasi:kpiData[11].realisasi[m] },
     { name:'Biaya Penyambungan',           satuan:'Rp M',      pct:kpiData[12].pencapaian[m], target:kpiData[12].target[m], realisasi:kpiData[12].realisasi[m] },
     { name:'Pelanggan Lisdes',             satuan:'Pelanggan', pct:kpiData[13].pencapaian[m], target:kpiData[13].target[m], realisasi:kpiData[13].realisasi[m] },
-    { name:'Response Time Gangguan',       satuan:'menit',     pct:kpiData[16].pencapaian[m], target:kpiData[16].target[m], realisasi:kpiData[16].realisasi[m] },
-    { name:'Success Rate Auto Dispatch',   satuan:'%',         pct:kpiData[17].pencapaian[m], target:kpiData[17].target[m], realisasi:kpiData[17].realisasi[m] },
-    { name:'Gangguan TM Permanen',         satuan:'kali',      pct:kpiData[19].pencapaian[m], target:kpiData[19].target[m], realisasi:kpiData[19].realisasi[m] },
-    { name:'Perolehan kWh P2TL',           satuan:'kWh',       pct:kpiData[33].pencapaian[m], target:kpiData[33].target[m], realisasi:kpiData[33].realisasi[m] },
-    { name:'Penyelesaian Ganti Meter',     satuan:'Unit',      pct:kpiData[34].pencapaian[m], target:kpiData[34].target[m], realisasi:kpiData[34].realisasi[m] },
-    { name:'Pelunasan PRR',                satuan:'Rp Juta',   pct:kpiData[25].pencapaian[m], target:kpiData[25].target[m], realisasi:kpiData[25].realisasi[m] },
-    { name:'Anggaran Investasi (RKAP)',    satuan:'%',         pct:kpiData[28].pencapaian[m], target:kpiData[28].target[m], realisasi:kpiData[28].realisasi[m] },
+    { name:'kWh Penjualan Lisdes',         satuan:'kWh',       pct:kpiData[14].pencapaian[m], target:kpiData[14].target[m], realisasi:kpiData[14].realisasi[m] },
+    { name:'Response Time Gangguan',       satuan:'menit',     pct:kpiData[17].pencapaian[m], target:kpiData[17].target[m], realisasi:kpiData[17].realisasi[m] },
+    { name:'Success Rate Auto Dispatch',   satuan:'%',         pct:kpiData[18].pencapaian[m], target:kpiData[18].target[m], realisasi:kpiData[18].realisasi[m] },
+    { name:'Transaksi PLN Mobile',         satuan:'Transaksi', pct:kpiData[19].pencapaian[m], target:kpiData[19].target[m], realisasi:kpiData[19].realisasi[m] },
+    { name:'Gangguan TM Permanen',         satuan:'kali',      pct:kpiData[21].pencapaian[m], target:kpiData[21].target[m], realisasi:kpiData[21].realisasi[m] },
+    { name:'Perolehan kWh P2TL',           satuan:'kWh',       pct:kpiData[36].pencapaian[m], target:kpiData[36].target[m], realisasi:kpiData[36].realisasi[m] },
+    { name:'Penyelesaian Ganti Meter',     satuan:'Unit',      pct:kpiData[37].pencapaian[m], target:kpiData[37].target[m], realisasi:kpiData[37].realisasi[m] },
+    { name:'Pelunasan PRR',                satuan:'Rp Juta',   pct:kpiData[28].pencapaian[m], target:kpiData[28].target[m], realisasi:kpiData[28].realisasi[m] },
+    { name:'Anggaran Investasi (RKAP)',    satuan:'%',         pct:kpiData[31].pencapaian[m], target:kpiData[31].target[m], realisasi:kpiData[31].realisasi[m] },
   ];
 
   const grid = document.getElementById('gauge-grid');
@@ -1442,7 +1463,7 @@ function init() {
   buildNKOChart();
   buildBobotChart();
   buildAllLineCharts();
-  setMonth(2);
+  setMonth(3);
 }
 
 document.addEventListener('DOMContentLoaded', init);
