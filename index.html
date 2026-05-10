@@ -2934,23 +2934,22 @@ function applyExportStyles(enable) {
 }
 
 async function renderUnitToCanvas(unitKey) {
-  const CAPTURE_W = 1200;   // fixed render width (CSS px)
-  const SCALE     = 2;      // retina-quality output
+  const CAPTURE_W = 1200;
+  const SCALE     = 2;
   const bg        = resolveCSSVar('--bg') || '#0a0f1e';
 
-  // ── Step 1: prepare DOM ───────────────────────────────────────────────
-  // Hide chrome that must not appear in export
+  // ── 1. Hide chrome ────────────────────────────────────────────────────
   const layout    = document.getElementById('app-layout');
   const toggleBtn = document.getElementById('sb-toggle-btn');
   const sidebar   = document.querySelector('.sidebar');
+  const modal     = document.getElementById('export-modal-backdrop');
   layout.classList.add('sb-collapsed');
   toggleBtn.style.display = 'none';
   sidebar.style.display   = 'none';
-  document.getElementById('export-modal-backdrop').classList.remove('open');
+  modal.classList.remove('open');
   await delay(60);
 
-  // ── Step 2: inject fixed-width layout CSS ─────────────────────────────
-  // Overrides ALL responsive breakpoints so layout = desktop regardless of screen
+  // ── 2. Lock layout to fixed desktop width ─────────────────────────────
   const lockId = '__layout_lock__';
   let lockStyle = document.getElementById(lockId);
   if (!lockStyle) {
@@ -2959,48 +2958,49 @@ async function renderUnitToCanvas(unitKey) {
     document.head.appendChild(lockStyle);
   }
   lockStyle.textContent = `
-    html, body { overflow: hidden !important; }
-    .main-content {
+    html, body { overflow: hidden !important; width: ${CAPTURE_W}px !important; }
+    .app-layout, .main-content {
       margin-left: 0 !important; width: ${CAPTURE_W}px !important;
-      min-width: ${CAPTURE_W}px !important; max-width: ${CAPTURE_W}px !important;
+      min-width: ${CAPTURE_W}px !important; max-width: none !important;
     }
-    #dashboard-content, #exec-summary {
-      width: ${CAPTURE_W}px !important; max-width: ${CAPTURE_W}px !important;
-    }
-    .wrapper { max-width: ${CAPTURE_W}px !important; padding: 0 20px !important; }
-    /* Force 2-column chart grid */
-    .charts-grid       { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
-    /* Force 4-column gauge grid */
-    .speedometers-grid { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 12px !important; }
-    /* Force 4-column summary */
-    .summary-grid      { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 12px !important; }
-    /* Exec summary grids */
-    .nko-hero-grid { display: grid !important; grid-template-columns: repeat(6,1fr) !important; gap: 10px !important; }
-    .insight-grid  { display: grid !important; grid-template-columns: repeat(3,1fr) !important; gap: 12px !important; }
-    /* Fixed chart heights */
-    .chart-wrap            { height: 240px !important; min-height: 240px !important; }
-    .chart-card-sm .chart-wrap { height: 200px !important; min-height: 200px !important; }
-    /* Gauge SVG wrap */
-    .gauge-canvas-wrap     { width: 100% !important; aspect-ratio: 2/1 !important; }
-    /* Header layout */
-    header { flex-direction: row !important; flex-wrap: nowrap !important; padding-top: 20px !important; }
+    .wrapper { max-width: ${CAPTURE_W}px !important; padding: 0 24px !important; }
+    #dashboard-content, #exec-summary { width: 100% !important; max-width: none !important; }
+    /* Fix header — remove extra top padding from toggle button */
+    header { padding-top: 28px !important; flex-direction: row !important;
+             flex-wrap: nowrap !important; align-items: flex-start !important; }
+    .exec-header { padding-top: 24px !important; }
     .header-right { align-items: flex-end !important; }
+    /* Desktop grid layouts */
+    .charts-grid       { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+    .speedometers-grid { display: grid !important; grid-template-columns: repeat(5,1fr) !important; gap: 10px !important; }
+    .summary-grid      { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 12px !important; }
+    .nko-hero-grid     { display: grid !important; grid-template-columns: repeat(6,1fr) !important; gap: 10px !important; }
+    .insight-grid      { display: grid !important; grid-template-columns: repeat(3,1fr) !important; gap: 12px !important; }
+    .unit-detail-table, [style*="overflow-x"] { overflow: visible !important; }
+    /* Fixed precise chart heights */
+    .chart-wrap                { height: 260px !important; min-height: 260px !important; max-height: 260px !important; }
+    .chart-card-sm .chart-wrap { height: 210px !important; min-height: 210px !important; max-height: 210px !important; }
+    /* Gauge: fixed aspect ratio so semicircle is not clipped */
+    .gauge-canvas-wrap { position: relative !important; width: 100% !important;
+                         padding-bottom: 52% !important; height: 0 !important; overflow: visible !important; }
+    .gauge-canvas-wrap svg { position: absolute !important; top: 0; left: 0;
+                             width: 100% !important; height: auto !important; }
     /* Month selector */
     .month-selector { flex-wrap: nowrap !important; }
-    /* Table scroll */
-    [style*="overflow-x:auto"], [style*="overflow-x: auto"] { overflow-x: visible !important; }
+    /* Hide toggle button area */
+    .sb-toggle { display: none !important; }
   `;
   await delay(80);
 
-  // ── Step 3: apply theme colour overrides ──────────────────────────────
+  // ── 3. Apply theme colour overrides ───────────────────────────────────
   applyExportStyles(true);
   await delay(60);
 
-  // ── Step 4: switch to target unit & month ─────────────────────────────
+  // ── 4. Switch unit & month ────────────────────────────────────────────
   let el;
   if (unitKey === 'summary') {
     switchUnit('summary');
-    await delay(800);
+    await delay(900);
     el = document.getElementById('exec-summary');
   } else {
     switchUnit(unitKey);
@@ -3010,35 +3010,34 @@ async function renderUnitToCanvas(unitKey) {
     el = document.getElementById('dashboard-content');
   }
 
-  // ── Step 5: DESTROY all Chart.js, force container to new width, REBUILD ─
-  // This is the key fix: charts must be created AFTER the new layout is set.
-  // Simply calling c.resize() is not enough on mobile — chart internals cache
-  // the old container size. Destroy + rebuild forces a clean render.
-  const savedUnit  = activeUnit;
+  // ── 5. Destroy ALL charts then rebuild at new container size ──────────
+  // Critical: c.resize() is NOT enough — Chart.js caches the old pixel size.
+  // We must destroy → rebuild so charts measure the new 1200px containers.
   const savedMonth = currentMonth;
 
-  // Destroy
   Object.keys(charts).forEach(k => {
     try { charts[k].destroy(); delete charts[k]; } catch(_) {}
   });
-  await delay(80);
+  await delay(60);
 
-  // Rebuild Charts.js charts at new size
-  // (SVG gauges auto-resize with CSS; only canvas-based charts need this)
   buildNKOChart();
   buildBobotChart();
   buildNilai100Chart(savedMonth);
   buildAllLineCharts();
-  await delay(600); // wait for Chart.js to finish drawing
+  await delay(700); // Chart.js needs time to draw at full size
 
-  // Rebuild SVG gauges (they need the correct container width too)
-  buildGauges(savedMonth);
+  buildGauges(savedMonth); // SVG — regenerate at new container width
   await delay(200);
 
-  // ── Step 6: capture ───────────────────────────────────────────────────
+  // ── 6. Measure element AFTER layout settles ───────────────────────────
+  // Use scrollHeight/scrollWidth to get full content size (not clipped viewport)
   window.scrollTo(0, 0);
   await delay(60);
 
+  const elH = el.scrollHeight;
+  const elW = el.scrollWidth;
+
+  // ── 7. Capture ────────────────────────────────────────────────────────
   let canvas;
   try {
     canvas = await html2canvas(el, {
@@ -3047,39 +3046,44 @@ async function renderUnitToCanvas(unitKey) {
       allowTaint     : true,
       logging        : false,
       backgroundColor: bg,
+      // Use fixed logical dimensions — NOT getBoundingClientRect
+      // which gives viewport-clipped coordinates on mobile
+      width          : elW,
+      height         : elH,
       windowWidth    : CAPTURE_W,
-      windowHeight   : Math.ceil(el.getBoundingClientRect().height),
-      x: el.getBoundingClientRect().left,
-      y: el.getBoundingClientRect().top + window.scrollY,
+      windowHeight   : elH,
+      x              : 0,
+      y              : 0,
       scrollX        : 0,
       scrollY        : 0,
       onclone(clonedDoc) {
-        // Copy live canvas pixel data into the cloned document
-        // (html2canvas clones DOM but not canvas pixel content)
+        // Copy live chart canvas pixel data into cloned document
+        // (html2canvas resets canvas content when cloning DOM)
         clonedDoc.querySelectorAll('canvas[id]').forEach(cloneCanvas => {
-          const liveCanvas = document.getElementById(cloneCanvas.id);
-          if (!liveCanvas) return;
-          cloneCanvas.width  = liveCanvas.width;
-          cloneCanvas.height = liveCanvas.height;
+          const live = document.getElementById(cloneCanvas.id);
+          if (!live || !live.width || !live.height) return;
+          cloneCanvas.width  = live.width;
+          cloneCanvas.height = live.height;
           const ctx = cloneCanvas.getContext('2d');
-          if (ctx) ctx.drawImage(liveCanvas, 0, 0);
+          if (ctx) {
+            try { ctx.drawImage(live, 0, 0); } catch(_) {}
+          }
         });
       },
       ignoreElements(e) {
         const id = e.id || '';
-        if (id === '__export_style__' || id === lockId) return true;
-        if (e.classList && e.classList.contains('no-print')) return true;
-        return false;
+        return id === '__export_style__' ||
+               id === lockId ||
+               (e.classList && e.classList.contains('no-print'));
       }
     });
   } finally {
-    // ── Step 7: restore everything ────────────────────────────────────────
+    // ── 8. Restore ────────────────────────────────────────────────────────
     applyExportStyles(false);
     lockStyle.textContent = '';
     toggleBtn.style.display = '';
     sidebar.style.display   = '';
   }
-
   return canvas;
 }
 
