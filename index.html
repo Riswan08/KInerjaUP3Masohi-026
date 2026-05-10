@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Kinerja UP3 Masohi 2026</title>
+<title>Dashboard Kinerja UP3 & ULP Masohi 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -495,6 +495,163 @@
   .gauge-vals .gv-item span { display: block; font-size: 11px; font-weight: 700; color: var(--text); }
   .gauge-vals .gv-sep { width: 1px; height: 24px; background: var(--border); }
 
+
+  /* ── EXECUTIVE SUMMARY ─────────────────────────────────── */
+  #exec-summary { display:none; }
+  #exec-summary.visible { display:block; }
+  .exec-header {
+    padding: 32px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .exec-header h1 { font-family:'DM Serif Display',serif; font-size:clamp(22px,3.5vw,34px); color:var(--h1-color); }
+  .exec-header h1 em { font-style:italic; color:var(--accent); }
+  .exec-header p { color:var(--text-dim); font-size:13px; margin-top:6px; }
+  .exec-section-title {
+    font-family:'DM Serif Display',serif; font-size:18px; color:var(--h1-color);
+    margin:28px 0 14px; display:flex; align-items:center; gap:10px;
+  }
+  .exec-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  /* NKO hero row */
+  .nko-hero-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:24px;
+  }
+  .nko-hero-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 14px; text-align:center; position:relative; overflow:hidden;
+    transition:transform .2s, var(--transition);
+  }
+  .nko-hero-card:hover { transform:translateY(-2px); }
+  .nko-hero-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--hc,var(--accent)); }
+  .nko-hero-rank {
+    position:absolute; top:10px; right:10px;
+    font-size:10px; font-weight:800; color:var(--text-muted);
+    background:var(--surface2); border-radius:6px; padding:2px 6px;
+  }
+  .nko-hero-unit { font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:6px; }
+  .nko-hero-val  { font-family:'DM Serif Display',serif; font-size:30px; }
+  .nko-hero-bar  { height:5px; border-radius:3px; margin:8px 0 4px; background:var(--border); overflow:hidden; }
+  .nko-hero-fill { height:100%; border-radius:3px; }
+  .nko-hero-trend { font-size:10px; color:var(--text-muted); }
+  /* Ranking table */
+  .rank-table { width:100%; border-collapse:collapse; }
+  .rank-table th {
+    font-size:9.5px; text-transform:uppercase; letter-spacing:.07em;
+    color:var(--text-muted); padding:8px 12px; text-align:left;
+    background:var(--surface2); border-bottom:1px solid var(--border);
+  }
+  .rank-table td { padding:9px 12px; font-size:12.5px; color:var(--text-dim); border-bottom:1px solid var(--border); transition:var(--transition); }
+  .rank-table tr:last-child td { border-bottom:none; }
+  .rank-table tr:hover td { background:rgba(255,255,255,.02); }
+  .rank-medal { font-size:16px; }
+  .rank-bar-cell { width:120px; }
+  .rank-bar-bg { height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .rank-bar-in { height:100%; border-radius:3px; }
+  /* Summary insight cards */
+  .insight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-bottom:24px; }
+  .insight-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:16px; display:flex; flex-direction:column; gap:8px;
+    transition:var(--transition);
+  }
+  .insight-card-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text-muted); }
+  .insight-card-val   { font-family:'DM Serif Display',serif; font-size:26px; color:var(--text); }
+  .insight-card-sub   { font-size:11px; color:var(--text-dim); line-height:1.4; }
+  /* Per-unit detail table */
+  .unit-detail-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .unit-detail-table th {
+    font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted);
+    padding:7px 10px; background:var(--surface2); border-bottom:1px solid var(--border); text-align:center; white-space:nowrap;
+  }
+  .unit-detail-table th:first-child { text-align:left; }
+  .unit-detail-table td { padding:8px 10px; border-bottom:1px solid var(--border); text-align:center; vertical-align:middle; transition:var(--transition); }
+  .unit-detail-table td:first-child { text-align:left; font-weight:700; color:var(--text); }
+  .unit-detail-table tr:last-child td { border-bottom:none; }
+  .unit-detail-table tr:hover td { background:rgba(255,255,255,.02); }
+  .ud-chip { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px; }
+  .ud-green  { background:rgba(16,185,129,.15); color:#10b981; }
+  .ud-yellow { background:rgba(245,158,11,.15);  color:#f59e0b; }
+  .ud-red    { background:rgba(239,68,68,.15);   color:#ef4444; }
+  .app-layout { display:flex; min-height:100vh; }
+  .sidebar {
+    width:220px; flex-shrink:0;
+    background:var(--surface); border-right:1px solid var(--border);
+    position:fixed; top:0; left:0; bottom:0; z-index:100;
+    display:flex; flex-direction:column; overflow-y:auto;
+    transition:background 0.35s, border-color 0.35s;
+  }
+  .sb-logo { padding:18px 14px 12px; border-bottom:1px solid var(--border); }
+  .sb-logo h2 { font-family:"DM Serif Display",serif; font-size:15px; color:var(--h1-color); line-height:1.2; margin-top:6px; }
+  .sb-logo p  { font-size:10px; color:var(--text-muted); margin-top:2px; }
+  .sb-section { font-size:9px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.1em; color:var(--text-muted); padding:12px 14px 3px; }
+  .sb-item {
+    display:flex; align-items:center; gap:9px;
+    padding:8px 14px; margin:1px 6px; border-radius:8px;
+    cursor:pointer; font-size:12.5px; font-weight:500; color:var(--text-dim);
+    transition:background .15s,color .15s; border:none; background:none;
+    width:calc(100% - 12px); text-align:left;
+  }
+  .sb-item:hover { background:rgba(255,255,255,.05); color:var(--text); }
+  .sb-item.active { background:rgba(0,212,170,.12); color:var(--accent); font-weight:700; }
+  .sb-badge {
+    margin-left:auto; font-size:10px; font-weight:700;
+    padding:1px 5px; border-radius:8px;
+    background:rgba(0,212,170,.12); color:var(--accent);
+  }
+  .sb-item.active .sb-badge { background:rgba(0,212,170,.25); }
+  .sb-divider { height:1px; background:var(--border); margin:6px 14px; }
+  .sb-footer { margin-top:auto; padding:12px 14px; border-top:1px solid var(--border); }
+
+  /* ── SIDEBAR TOGGLE ─────────────────────────────────────── */
+  .sb-toggle {
+    position: fixed;
+    top: 14px;
+    z-index: 200;
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: left .25s ease, background .2s, color .2s, border-color .2s, box-shadow .2s, var(--transition);
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  }
+  .sb-toggle:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .sb-toggle svg { width:16px; height:16px; flex-shrink:0; }
+
+  /* Collapsed state */
+  .app-layout.sb-collapsed .sidebar { transform: translateX(-220px); }
+  .app-layout.sb-collapsed .main-content { margin-left: 0; }
+  .app-layout.sb-collapsed .sb-toggle { left: 12px; }
+  .app-layout:not(.sb-collapsed) .sb-toggle { left: 232px; }
+
+  .sidebar { transition: transform .25s ease, background 0.35s, border-color 0.35s; }
+  .main-content { transition: margin-left .25s ease; }
+
+  @media(max-width:900px){
+    .app-layout.sb-collapsed .sb-toggle { left: 12px; }
+    .app-layout:not(.sb-collapsed) .sb-toggle { left: 64px; }
+  }
+  .theme-row { display:flex; gap:4px; margin-top:6px; }
+  .theme-btn {
+    flex:1; padding:6px 0; border-radius:6px;
+    border:1px solid var(--border); background:var(--surface2);
+    color:var(--text-dim); font-family:"DM Sans",sans-serif;
+    font-size:11px; cursor:pointer; transition:all .2s;
+  }
+  .theme-btn.active { background:var(--accent); border-color:var(--accent); color:#0a0f1e; font-weight:700; }
+  .main-content { margin-left:220px; flex:1; min-width:0; }
+  @media(max-width:900px){
+    .sidebar{width:52px;}
+    .sb-item .sb-text,.sb-section,.sb-logo h2,.sb-logo p,.sb-badge{ display:none; }
+    .sb-logo{padding:10px 6px;}
+    .sb-item{justify-content:center;padding:10px 0;margin:1px 2px;width:calc(100% - 4px);}
+    .main-content{margin-left:52px;}
+    .theme-row{flex-direction:column;}
+  }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 20px 0;
@@ -513,17 +670,51 @@
 </style>
 </head>
 <body>
-<div class="wrapper">
+<div class="app-layout" id="app-layout">
 
-  <!-- HEADER -->
+<!-- Sidebar toggle button -->
+<button class="sb-toggle" id="sb-toggle-btn" onclick="toggleSidebar()" title="Sembunyikan/Tampilkan Sidebar">
+  <svg id="sb-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-badge"><div class="logo-dot"></div><span style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase">PLN · 2026</span></div>
+    <h2>Kinerja<br>UP3 Masohi</h2>
+    <p>UIW Maluku &amp; Maluku Utara</p>
+  </div>
+  <div class="sb-section">Laporan</div>
+  <button class="sb-item" onclick="switchUnit('summary')" id="nav-summary"><span>📊</span><span class="sb-text">Executive Summary</span></button>
+  <div class="sb-section">Unit Pelaksana</div>
+  <button class="sb-item active" onclick="switchUnit('up3')" id="nav-up3"><span>🏢</span><span class="sb-text">UP3 Masohi</span><span class="sb-badge" id="badge-up3">106.79</span></button>
+  <div class="sb-section">Unit Layanan Pelanggan</div>
+  <button class="sb-item" onclick="switchUnit('masohi')" id="nav-masohi"><span>📍</span><span class="sb-text">ULP Masohi</span><span class="sb-badge" id="badge-masohi">95.23</span></button>
+  <button class="sb-item" onclick="switchUnit('kairatu')" id="nav-kairatu"><span>📍</span><span class="sb-text">ULP Kairatu</span><span class="sb-badge" id="badge-kairatu">98.32</span></button>
+  <button class="sb-item" onclick="switchUnit('piru')" id="nav-piru"><span>📍</span><span class="sb-text">ULP Piru</span><span class="sb-badge" id="badge-piru">101.38</span></button>
+  <button class="sb-item" onclick="switchUnit('kobisonta')" id="nav-kobisonta"><span>📍</span><span class="sb-text">ULP Kobisonta</span><span class="sb-badge" id="badge-kobisonta">108.70</span></button>
+  <button class="sb-item" onclick="switchUnit('bula')" id="nav-bula"><span>📍</span><span class="sb-text">ULP Bula</span><span class="sb-badge" id="badge-bula">95.64</span></button>
+  <div class="sb-footer">
+    <div class="sb-section" style="padding:0 0 4px">Tampilan</div>
+    <div class="theme-row">
+      <button class="theme-btn active" id="btn-dark" onclick="setTheme('dark')">🌙 Gelap</button>
+      <button class="theme-btn" id="btn-light" onclick="setTheme('light')">☀️ Terang</button>
+    </div>
+  </div>
+</aside>
+<div class="main-content">
+<div class="wrapper">
+<div id="dashboard-content">
   <header>
     <div class="header-left">
       <div class="logo-badge">
         <div class="logo-dot"></div>
         <span>PLN UP3 Masohi · 2026</span>
       </div>
-      <h1>Dashboard <em>Kinerja</em><br>UP3 Masohi</h1>
-      <p class="subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Apr 2026</p>
+      <h1>Dashboard <em>Kinerja</em><br><span id="unit-title">UP3 Masohi</span></h1>
+      <p class="subtitle" id="unit-subtitle">Monitoring Indikator Kinerja Utama · Data Jan–Apr 2026</p>
     </div>
     <div class="header-right">
       <!-- THEME TOGGLE -->
@@ -678,12 +869,727 @@
     </div>
   </div>
 
-</div>
+</div><!-- end dashboard-content -->
+</div><!-- wrapper -->
+
+<!-- ═══════════════ EXECUTIVE SUMMARY PANEL ═══════════════ -->
+<div id="exec-summary" class="wrapper">
+  <div class="exec-header">
+    <div class="logo-badge" style="margin-bottom:10px"><div class="logo-dot"></div><span style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase">PLN UP3 Masohi · 2026</span></div>
+    <h1>Executive <em>Summary</em></h1>
+    <p>Rekapitulasi Kinerja UP3 Masohi &amp; Seluruh ULP · s.d. April 2026</p>
+  </div>
+
+  <!-- NKO HERO CARDS -->
+  <p class="exec-section-title">NKO Aktual s.d. April 2026</p>
+  <div class="nko-hero-grid" id="es-nko-hero"></div>
+
+  <!-- RANKING TABLE -->
+  <p class="exec-section-title">Peringkat NKO ULP</p>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+    <table class="rank-table" id="es-rank-table">
+      <thead>
+        <tr>
+          <th>Peringkat</th>
+          <th>Unit</th>
+          <th>NKO April</th>
+          <th>Jan</th><th>Feb</th><th>Mar</th>
+          <th style="width:130px">Progress ke Target 110</th>
+          <th>Tren</th>
+        </tr>
+      </thead>
+      <tbody id="es-rank-body"></tbody>
+    </table>
+  </div>
+
+  <!-- INSIGHT CARDS -->
+  <p class="exec-section-title">Insight Kinerja</p>
+  <div class="insight-grid" id="es-insights"></div>
+
+  <!-- DETAIL TABLE PER KPI -->
+  <p class="exec-section-title">Detail Pencapaian Indikator Utama s.d. April 2026</p>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:auto;margin-bottom:32px">
+    <table class="unit-detail-table" id="es-detail-table">
+      <thead>
+        <tr>
+          <th>Indikator Kinerja</th>
+          <th>UP3 Masohi</th>
+          <th>ULP Masohi</th>
+          <th>ULP Kairatu</th>
+          <th>ULP Piru</th>
+          <th>ULP Kobisonta</th>
+          <th>ULP Bula</th>
+        </tr>
+      </thead>
+      <tbody id="es-detail-body"></tbody>
+    </table>
+  </div>
+
+</div><!-- end exec-summary -->
+
 <footer>
-  <div class="wrapper">Dashboard Kinerja UP3 Masohi · PT PLN (Persero) · Data 2026</div>
+  <div class="wrapper">Dashboard Kinerja UP3 & ULP Masohi · PT PLN (Persero) · Data 2026</div>
 </footer>
 
 <script>
+
+const ulpData = {
+  up3: { label:'UP3 Masohi', subtitle:'Unit Pelaksana Pelayanan Pelanggan', nko:[104.09,103.30,104.15,106.79], kpi:null },
+  masohi: {
+    label:"ULP Masohi", subtitle:"Unit Layanan Pelanggan Masohi",
+    nko:[84.41,86.32,88.22,95.23],
+    kpi:[
+      {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
+       target:[0.84,1.46,2.24,2.8],realisasi:[-0.37,-0.29,0.24,1.0],pencapaian:[-44.04,-19.86,10.71,35.71],nilai100:[0.0,0.0,1.5,5.0]},
+      {no:"2",name:"Susut Distribusi",sat:"%",bob:12,grp:false,
+       target:[7.7,7.69,7.68,7.67],realisasi:[7.54,6.88,7.69,7.82],pencapaian:[102.07,110,99.86,98.04],nilai100:[12.25,13.2,11.99,11.77]},
+      {no:"3",name:"Keandalan Penyaluran",sat:"",bob:12,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[15.4,15.4,15.4,15.4]},
+      {no:"3a",name:"\u00b7 SAIDI",sat:"menit/plg",bob:6,grp:false,
+       target:[10.2,20.4,30.6,40.8],realisasi:[8.2,17.9,26.14,35.73],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3b",name:"\u00b7 SAIFI",sat:"kali/plg",bob:6,grp:false,
+       target:[0.21,0.41,0.62,0.82],realisasi:[0.18,0.28,0.42,0.53],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3c",name:"\u00b7 ENS",sat:"MWh",bob:2,grp:false,
+       target:[1.7,3.4,5.1,6.8],realisasi:[1.03,2.19,3.19,4.36],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"4",name:"Penyelesaian RUPTL",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[10,10,10,10]},
+      {no:"4a",name:"\u00b7 Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"4b",name:"\u00b7 Aset Fisik",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"5",name:"Percepatan Penyambungan",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.81,8.27,8.28,9.59]},
+      {no:"5a",name:"\u00b7 Penambahan Pelanggan",sat:"Plg",bob:0.5,grp:false,
+       target:[60,154,248,287],realisasi:[48,223,307,388],pencapaian:[80,110,110,110],nilai100:[0.4,0.55,0.55,0.55]},
+      {no:"5b",name:"\u00b7 Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.73,1.51,2.28,2.36],realisasi:[0.1,0.32,0.23,1.31],pencapaian:[13.69,21.19,10.08,55.5],nilai100:[0.21,0.32,0.16,0.84]},
+      {no:"5c",name:"\u00b7 Biaya Penyambungan",sat:"Rp M",bob:2,grp:false,
+       target:[0.2,0.4,0.6,0.8],realisasi:[0.12,0.28,0.47,1.23],pencapaian:[60,70,78.33,110],nilai100:[1.2,1.4,1.57,2.2]},
+      {no:"5d",name:"\u00b7 Pelanggan Lisdes",sat:"Plg",bob:4,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[4,4,4,4]},
+      {no:"5e",name:"\u00b7 kWh Penjualan Lisdes",sat:"kWh",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"6",name:"Pelayanan Pelanggan",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.8,7.82,8.34,8.4]},
+      {no:"6a",name:"\u00b7 Feedback Negatif",sat:"kali",bob:2,grp:false,
+       target:[0.5,0.5,0.5,0.5],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6b",name:"\u00b7 Response Time",sat:"menit",bob:2,grp:false,
+       target:[30,30,30,30],realisasi:[25.3,24.82,24.57,24.55],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6c",name:"\u00b7 Auto Dispatch",sat:"%",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[28.45,21.13,19.74,20.79],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"7a",name:"\u00b7 Gangguan TM",sat:"kali",bob:5,grp:false,
+       target:[31,62,93,122],realisasi:[16,34,46,64],pencapaian:[110,110,110,110],nilai100:[5.5,5.5,5.5,5.5]},
+      {no:"7b",name:"\u00b7 Kerusakan Peralatan",sat:"Unit",bob:2,grp:false,
+       target:[2,2,2,4],realisasi:[0,1,1,3],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"8",name:"ERT Distribusi",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8,8,8,8]},
+      {no:"8a",name:"\u00b7 MVOD",sat:"%",bob:6,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[6,6,6,6]},
+      {no:"8b",name:"\u00b7 MTTR Siaga 1",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4.2,4.2,4.2,6.4]},
+      {no:"9a",name:"\u00b7 Saldo Rata-rata",sat:"Rp Juta",bob:2,grp:false,
+       target:[8.64,8.64,8.64,8.64],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"9b",name:"\u00b7 Pelunasan PRR",sat:"Rp Juta",bob:2,grp:false,
+       target:[6.23,12.46,18.68,24.91],realisasi:[0,0,0,107.06],pencapaian:[0,0,0,110],nilai100:[0,0,0,2.2]},
+      {no:"9c",name:"\u00b7 Penghapusan PRR",sat:"",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"10",name:"Transaksi Energi",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[6.05,6.51,7.07,7.17]},
+      {no:"10a",name:"\u00b7 P2TL",sat:"kWh",bob:3,grp:false,
+       target:[60922,121844,182766,243688],realisasi:[61971,123943,185913,247883],pencapaian:[101.72,101.72,101.72,101.72],nilai100:[3.06,3.06,3.06,3.06]},
+      {no:"10b",name:"\u00b7 Ganti Meter",sat:"Unit",bob:2,grp:false,
+       target:[395,790,1185,1580],realisasi:[155,492,1070,1509],pencapaian:[39.24,62.27,90.29,95.5],nilai100:[0.79,1.25,1.81,1.91]},
+      {no:"10c",name:"\u00b7 LBKB",sat:"%",bob:1,grp:false,
+       target:[null,null,null,null],realisasi:[100,100,100,100],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"11",name:"Digitalisasi",sat:"",bob:4,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4,4,4,4]},
+      {no:"11a",name:"\u00b7 Aset Distribusi",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"11b",name:"\u00b7 Pemeliharaan",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+    ]
+  },
+  kairatu: {
+    label:"ULP Kairatu", subtitle:"Unit Layanan Pelanggan Kairatu",
+    nko:[84.52,90.09,92.96,98.32],
+    kpi:[
+      {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
+       target:[0.35,0.61,0.94,1.16],realisasi:[-0.01,0.11,0.38,0.68],pencapaian:[-2.85,18.03,40.42,58.62],nilai100:[0,2.53,5.66,8.21]},
+      {no:"2",name:"Susut Distribusi",sat:"%",bob:12,grp:false,
+       target:[9.53,9.52,9.51,9.5],realisasi:[9.52,8.89,9.27,9.45],pencapaian:[100.1,106.61,102.52,100.52],nilai100:[12.02,12.8,12.31,12.07]},
+      {no:"3",name:"Keandalan Penyaluran",sat:"",bob:12,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[15.4,15.4,15.4,15.4]},
+      {no:"3a",name:"\u00b7 SAIDI",sat:"menit/plg",bob:6,grp:false,
+       target:[22.18,44.36,66.54,88.72],realisasi:[16.86,31.67,45.75,64.58],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3b",name:"\u00b7 SAIFI",sat:"kali/plg",bob:6,grp:false,
+       target:[0.44,0.88,1.33,1.77],realisasi:[0.36,0.36,0.37,0.4],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3c",name:"\u00b7 ENS",sat:"MWh",bob:2,grp:false,
+       target:[1.46,2.91,4.37,5.82],realisasi:[0.81,1.79,2.44,3.59],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"4",name:"Penyelesaian RUPTL",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[10,10,10,10]},
+      {no:"4a",name:"\u00b7 Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"4b",name:"\u00b7 Aset Fisik",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"5",name:"Percepatan Penyambungan",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.41,7.75,8.01,8.37]},
+      {no:"5a",name:"\u00b7 Penambahan Pelanggan",sat:"Plg",bob:0.5,grp:false,
+       target:[26,68,110,127],realisasi:[16,61,95,141],pencapaian:[61.53,89.7,86.36,110],nilai100:[0.31,0.45,0.44,0.55]},
+      {no:"5b",name:"\u00b7 Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.2138,0.4276,0.6414,0.8552],realisasi:[0.06,0.12,0.25,0.36],pencapaian:[28.06,28.06,38.97,42.09],nilai100:[0.43,0.43,0.59,0.64]},
+      {no:"5c",name:"\u00b7 Biaya Penyambungan",sat:"Rp M",bob:2,grp:false,
+       target:[0.12,0.23,0.35,0.46],realisasi:[0.04,0.1,0.17,0.27],pencapaian:[33.33,43.47,48.57,58.69],nilai100:[0.67,0.87,0.98,1.18]},
+      {no:"5d",name:"\u00b7 Pelanggan Lisdes",sat:"Plg",bob:4,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[4,4,4,4]},
+      {no:"5e",name:"\u00b7 kWh Penjualan Lisdes",sat:"kWh",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"6",name:"Pelayanan Pelanggan",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8.1,8.63,8.59,8.65]},
+      {no:"6a",name:"\u00b7 Feedback Negatif",sat:"kali",bob:2,grp:false,
+       target:[0.5,0.5,0.5,0.5],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6b",name:"\u00b7 Response Time",sat:"menit",bob:2,grp:false,
+       target:[30,30,30,30],realisasi:[25.43,24.51,24.45,24.44],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6c",name:"\u00b7 Auto Dispatch",sat:"%",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[7.73,6.36,6.61,7.42],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"7a",name:"\u00b7 Gangguan TM",sat:"kali",bob:5,grp:false,
+       target:[44,89,133,180],realisasi:[18,42,67,118],pencapaian:[110,110,110,110],nilai100:[5.5,5.5,5.5,5.5]},
+      {no:"7b",name:"\u00b7 Kerusakan Peralatan",sat:"Unit",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"8",name:"ERT Distribusi",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8,8,8,8]},
+      {no:"8a",name:"\u00b7 MVOD",sat:"%",bob:6,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[6,6,6,6]},
+      {no:"8b",name:"\u00b7 MTTR Siaga 1",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4.2,4.2,4.2,6.4]},
+      {no:"9a",name:"\u00b7 Saldo Rata-rata",sat:"Rp Juta",bob:2,grp:false,
+       target:[8.64,8.64,8.64,8.64],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"9b",name:"\u00b7 Pelunasan PRR",sat:"Rp Juta",bob:2,grp:false,
+       target:[4.05,8.09,12.14,16.18],realisasi:[0,0,0,69.55],pencapaian:[0,0,0,110],nilai100:[0,0,0,2.2]},
+      {no:"9c",name:"\u00b7 Penghapusan PRR",sat:"",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"10",name:"Transaksi Energi",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[6.19,7.05,7.1,7.47]},
+      {no:"10a",name:"\u00b7 P2TL",sat:"kWh",bob:3,grp:false,
+       target:[47840,95680,143520,191360],realisasi:[39658,84276,128893,195816],pencapaian:[82.89,88.08,89.8,102.32],nilai100:[2.49,2.65,2.7,3.07]},
+      {no:"10b",name:"\u00b7 Ganti Meter",sat:"Unit",bob:2,grp:false,
+       target:[170,340,510,680],realisasi:[127,442,765,1132],pencapaian:[74.7,110,110,110],nilai100:[1.5,2.2,2.2,2.2]},
+      {no:"10c",name:"\u00b7 LBKB",sat:"%",bob:1,grp:false,
+       target:[null,null,null,null],realisasi:[100,100,100,100],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"11",name:"Digitalisasi",sat:"",bob:4,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4,4,4,4]},
+      {no:"11a",name:"\u00b7 Aset Distribusi",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"11b",name:"\u00b7 Pemeliharaan",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+    ]
+  },
+  piru: {
+    label:"ULP Piru", subtitle:"Unit Layanan Pelanggan Piru",
+    nko:[86.38,91.31,94.27,101.38],
+    kpi:[
+      {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
+       target:[0.45,0.78,1.21,1.5],realisasi:[-0.02,0.23,0.67,1.22],pencapaian:[-4.44,29.48,55.37,81.33],nilai100:[0,4.13,7.76,11.39]},
+      {no:"2",name:"Susut Distribusi",sat:"%",bob:12,grp:false,
+       target:[7.83,7.82,7.81,7.8],realisasi:[6.81,6.87,7.9,8.07],pencapaian:[110,110,98.84,96.53],nilai100:[13.2,13.2,11.87,11.59]},
+      {no:"3",name:"Keandalan Penyaluran",sat:"",bob:12,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[15.4,15.4,15.4,15.36]},
+      {no:"3a",name:"\u00b7 SAIDI",sat:"menit/plg",bob:6,grp:false,
+       target:[12.51,25.02,37.53,50.04],realisasi:[10.51,19.6,33.21,44.92],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3b",name:"\u00b7 SAIFI",sat:"kali/plg",bob:6,grp:false,
+       target:[0.16,0.32,0.49,0.65],realisasi:[0.14,0.22,0.43,0.59],pencapaian:[110,110,110,109.23],nilai100:[6.6,6.6,6.6,6.56]},
+      {no:"3c",name:"\u00b7 ENS",sat:"MWh",bob:2,grp:false,
+       target:[0.94,1.88,2.81,3.75],realisasi:[0.66,1.44,2.3,3.11],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"4",name:"Penyelesaian RUPTL",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[10,10,10,10]},
+      {no:"4a",name:"\u00b7 Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"4b",name:"\u00b7 Aset Fisik",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"5",name:"Percepatan Penyambungan",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8.41,8.85,8.59,8.71]},
+      {no:"5a",name:"\u00b7 Penambahan Pelanggan",sat:"Plg",bob:0.5,grp:false,
+       target:[57,149,239,276],realisasi:[93,206,259,334],pencapaian:[110,110,108.36,110],nilai100:[0.55,0.55,0.55,0.55]},
+      {no:"5b",name:"\u00b7 Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.57,1.15,1.75,1.81],realisasi:[0.13,0.31,0.42,0.58],pencapaian:[22.8,26.95,24.0,32.04],nilai100:[0.35,0.41,0.36,0.49]},
+      {no:"5c",name:"\u00b7 Biaya Penyambungan",sat:"Rp M",bob:2,grp:false,
+       target:[0.16,0.32,0.48,0.64],realisasi:[0.12,0.3,0.4,0.53],pencapaian:[75.27,94.09,83.63,83.11],nilai100:[1.51,1.89,1.68,1.67]},
+      {no:"5d",name:"\u00b7 Pelanggan Lisdes",sat:"Plg",bob:4,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[4,4,4,4]},
+      {no:"5e",name:"\u00b7 kWh Penjualan Lisdes",sat:"kWh",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"6",name:"Pelayanan Pelanggan",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8.17,8.29,8.4,8.63]},
+      {no:"6a",name:"\u00b7 Feedback Negatif",sat:"kali",bob:2,grp:false,
+       target:[0.5,0.5,0.5,0.5],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6b",name:"\u00b7 Response Time",sat:"menit",bob:2,grp:false,
+       target:[30,30,30,30],realisasi:[25.46,24.74,24.66,24.59],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6c",name:"\u00b7 Auto Dispatch",sat:"%",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[21.59,22.01,19.83,17.35],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"7a",name:"\u00b7 Gangguan TM",sat:"kali",bob:5,grp:false,
+       target:[19,37,55,73],realisasi:[2,6,12,16],pencapaian:[110,110,110,110],nilai100:[5.5,5.5,5.5,5.5]},
+      {no:"7b",name:"\u00b7 Kerusakan Peralatan",sat:"Unit",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"8",name:"ERT Distribusi",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8,8,8,8]},
+      {no:"8a",name:"\u00b7 MVOD",sat:"%",bob:6,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[6,6,6,6]},
+      {no:"8b",name:"\u00b7 MTTR Siaga 1",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4.2,4.2,4.2,6.4]},
+      {no:"9a",name:"\u00b7 Saldo Rata-rata",sat:"Rp Juta",bob:2,grp:false,
+       target:[8.64,8.64,8.64,8.64],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"9b",name:"\u00b7 Pelunasan PRR",sat:"Rp Juta",bob:2,grp:false,
+       target:[5.12,10.25,15.37,20.5],realisasi:[0,0,0,88.09],pencapaian:[0,0,0,110],nilai100:[0,0,0,2.2]},
+      {no:"9c",name:"\u00b7 Penghapusan PRR",sat:"",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"10",name:"Transaksi Energi",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[5.73,5.85,6.55,7.57]},
+      {no:"10a",name:"\u00b7 P2TL",sat:"kWh",bob:3,grp:false,
+       target:[44629,89258,133887,178516],realisasi:[47093,91710,136326,188379],pencapaian:[105.52,102.74,101.82,105.52],nilai100:[3.17,3.09,3.06,3.17]},
+      {no:"10b",name:"\u00b7 Ganti Meter",sat:"Unit",bob:2,grp:false,
+       target:[269,538,807,1076],realisasi:[48,150,519,849],pencapaian:[17.84,27.88,64.31,110],nilai100:[0.36,0.56,1.29,2.2]},
+      {no:"10c",name:"\u00b7 LBKB",sat:"%",bob:1,grp:false,
+       target:[null,null,null,null],realisasi:[100,100,100,100],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"11",name:"Digitalisasi",sat:"",bob:4,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4,4,4,4]},
+      {no:"11a",name:"\u00b7 Aset Distribusi",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"11b",name:"\u00b7 Pemeliharaan",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+    ]
+  },
+  kobisonta: {
+    label:"ULP Kobisonta", subtitle:"Unit Layanan Pelanggan Kobisonta",
+    nko:[101.96,91.93,106.79,108.7],
+    kpi:[
+      {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
+       target:[0.96,1.67,2.56,3.2],realisasi:[4.43,7.44,13.07,17.99],pencapaian:[110,110,110,110],nilai100:[15.4,15.4,15.4,15.4]},
+      {no:"2",name:"Susut Distribusi",sat:"%",bob:12,grp:false,
+       target:[5.65,5.61,5.58,5.55],realisasi:[2.88,9.79,2.96,2.84],pencapaian:[110,25.49,110,110],nilai100:[13.2,3.06,13.2,13.2]},
+      {no:"3",name:"Keandalan Penyaluran",sat:"",bob:12,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[15.23,15.4,15.37,14.9]},
+      {no:"3a",name:"\u00b7 SAIDI",sat:"menit/plg",bob:6,grp:false,
+       target:[14.42,28.83,43.25,57.67],realisasi:[4.11,9.76,33.2,45.89],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3b",name:"\u00b7 SAIFI",sat:"kali/plg",bob:6,grp:false,
+       target:[0.28,0.57,0.85,1.13],realisasi:[0.26,0.38,0.77,1.07],pencapaian:[107.14,110,109.41,105.3],nilai100:[6.43,6.6,6.57,6.32]},
+      {no:"3c",name:"\u00b7 ENS",sat:"MWh",bob:2,grp:false,
+       target:[1.55,3.1,4.65,6.2],realisasi:[0.46,1.33,3.75,6.28],pencapaian:[110,110,110,98.7],nilai100:[2.2,2.2,2.2,1.98]},
+      {no:"4",name:"Penyelesaian RUPTL",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[10,10,10,10]},
+      {no:"4a",name:"\u00b7 Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"4b",name:"\u00b7 Aset Fisik",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"5",name:"Percepatan Penyambungan",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.17,7.03,10.4,10.4]},
+      {no:"5a",name:"\u00b7 Penambahan Pelanggan",sat:"Plg",bob:0.5,grp:false,
+       target:[22,57,92,106],realisasi:[58,90,114,142],pencapaian:[110,110,110,110],nilai100:[0.55,0.55,0.55,0.55]},
+      {no:"5b",name:"\u00b7 Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.85,1.73,2.6,2.71],realisasi:[0.12,0.18,3.85,3.9],pencapaian:[14.11,10.4,110,110],nilai100:[0.22,0.16,1.65,1.65]},
+      {no:"5c",name:"\u00b7 Biaya Penyambungan",sat:"Rp M",bob:2,grp:false,
+       target:[0.45,0.9,1.35,1.8],realisasi:[0.09,0.14,2.46,2.53],pencapaian:[19.97,15.53,110,110],nilai100:[0.4,0.32,2.2,2.2]},
+      {no:"5d",name:"\u00b7 Pelanggan Lisdes",sat:"Plg",bob:4,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[4,4,4,4]},
+      {no:"5e",name:"\u00b7 kWh Penjualan Lisdes",sat:"kWh",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"6",name:"Pelayanan Pelanggan",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.98,8.02,8.71,8.8]},
+      {no:"6a",name:"\u00b7 Feedback Negatif",sat:"kali",bob:2,grp:false,
+       target:[0.5,0.5,0.5,0.5],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6b",name:"\u00b7 Response Time",sat:"menit",bob:2,grp:false,
+       target:[30,30,30,30],realisasi:[25.36,25.61,24.46,24.7],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6c",name:"\u00b7 Auto Dispatch",sat:"%",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[8.45,8.36,7.9,6.86],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"7a",name:"\u00b7 Gangguan TM",sat:"kali",bob:5,grp:false,
+       target:[17,32,49,73],realisasi:[4,5,8,10],pencapaian:[110,110,110,110],nilai100:[5.5,5.5,5.5,5.5]},
+      {no:"7b",name:"\u00b7 Kerusakan Peralatan",sat:"Unit",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"8",name:"ERT Distribusi",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8,8,8,8]},
+      {no:"8a",name:"\u00b7 MVOD",sat:"%",bob:6,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[6,6,6,6]},
+      {no:"8b",name:"\u00b7 MTTR Siaga 1",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4.2,4.2,4.2,6.4]},
+      {no:"9a",name:"\u00b7 Saldo Rata-rata",sat:"Rp Juta",bob:2,grp:false,
+       target:[8.64,8.64,8.64,8.64],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"9b",name:"\u00b7 Pelunasan PRR",sat:"Rp Juta",bob:2,grp:false,
+       target:[1.47,2.94,4.41,5.88],realisasi:[0,0,0,25.29],pencapaian:[0,0,0,110],nilai100:[0,0,0,2.2]},
+      {no:"9c",name:"\u00b7 Penghapusan PRR",sat:"",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"10",name:"Transaksi Energi",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"10a",name:"\u00b7 P2TL",sat:"kWh",bob:3,grp:false,
+       target:[11719,23438,35157,46876],realisasi:[14872,34700,47097,61965],pencapaian:[110,110,110,110],nilai100:[3.3,3.3,3.3,3.3]},
+      {no:"10b",name:"\u00b7 Ganti Meter",sat:"Unit",bob:2,grp:false,
+       target:[105,210,315,420],realisasi:[391,460,630,1050],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"10c",name:"\u00b7 LBKB",sat:"%",bob:1,grp:false,
+       target:[null,null,null,null],realisasi:[100,100,100,100],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"11",name:"Digitalisasi",sat:"",bob:4,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4,4,4,4]},
+      {no:"11a",name:"\u00b7 Aset Distribusi",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"11b",name:"\u00b7 Pemeliharaan",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+    ]
+  },
+  bula: {
+    label:"ULP Bula", subtitle:"Unit Layanan Pelanggan Bula",
+    nko:[88.05,88.92,89.74,95.64],
+    kpi:[
+      {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
+       target:[0.43,0.75,1.16,1.45],realisasi:[-0.25,-0.19,0.03,0.42],pencapaian:[-58.13,-25.33,2.58,28.96],nilai100:[0,0,0.37,4.06]},
+      {no:"2",name:"Susut Distribusi",sat:"%",bob:12,grp:false,
+       target:[7.33,7.32,7.31,7.3],realisasi:[5.58,4.9,4.96,5.14],pencapaian:[110,110,110,110],nilai100:[13.2,13.2,13.2,13.2]},
+      {no:"3",name:"Keandalan Penyaluran",sat:"",bob:12,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[15.1,14.65,15.4,15.4]},
+      {no:"3a",name:"\u00b7 SAIDI",sat:"menit/plg",bob:6,grp:false,
+       target:[7.8,15.61,23.41,31.21],realisasi:[5.53,11.43,17.36,23.33],pencapaian:[110,110,110,110],nilai100:[6.6,6.6,6.6,6.6]},
+      {no:"3b",name:"\u00b7 SAIFI",sat:"kali/plg",bob:6,grp:false,
+       target:[0.2,0.4,0.61,0.81],realisasi:[0.19,0.41,0.54,0.65],pencapaian:[105,97.5,110,110],nilai100:[6.3,5.85,6.6,6.6]},
+      {no:"3c",name:"\u00b7 ENS",sat:"MWh",bob:2,grp:false,
+       target:[0.87,1.73,2.6,3.46],realisasi:[0.43,0.92,1.33,1.78],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"4",name:"Penyelesaian RUPTL",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[10,10,10,10]},
+      {no:"4a",name:"\u00b7 Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"4b",name:"\u00b7 Aset Fisik",sat:"%",bob:5,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[5,5,5,5]},
+      {no:"5",name:"Percepatan Penyambungan",sat:"",bob:10,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[9.42,9.32,9.07,8.93]},
+      {no:"5a",name:"\u00b7 Penambahan Pelanggan",sat:"Plg",bob:0.5,grp:false,
+       target:[55,143,231,266],realisasi:[107,316,395,427],pencapaian:[110,110,110,110],nilai100:[0.55,0.55,0.55,0.55]},
+      {no:"5b",name:"\u00b7 Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.58,1.2,1.81,1.88],realisasi:[0.21,0.45,0.57,0.64],pencapaian:[36.2,37.5,31.49,34.04],nilai100:[0.55,0.57,0.48,0.52]},
+      {no:"5c",name:"\u00b7 Biaya Penyambungan",sat:"Rp M",bob:2,grp:false,
+       target:[0.1629,0.3257,0.4886,0.6514],realisasi:[0.14,0.26,0.35,0.41],pencapaian:[85.96,79.82,71.63,62.93],nilai100:[1.72,1.6,1.44,1.26]},
+      {no:"5d",name:"\u00b7 Pelanggan Lisdes",sat:"Plg",bob:4,grp:false,
+       target:[8,16,24,32],realisasi:[46,77,100,100],pencapaian:[110,110,110,110],nilai100:[4.4,4.4,4.4,4.4]},
+      {no:"5e",name:"\u00b7 kWh Penjualan Lisdes",sat:"kWh",bob:2,grp:false,
+       target:[543.17,1086.33,1629.5,2172.67],realisasi:[850,2452,5576,5576],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6",name:"Pelayanan Pelanggan",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8.48,8.73,8.66,8.63]},
+      {no:"6a",name:"\u00b7 Feedback Negatif",sat:"kali",bob:2,grp:false,
+       target:[0.5,0.5,0.5,0.5],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6b",name:"\u00b7 Response Time",sat:"menit",bob:2,grp:false,
+       target:[30,30,30,30],realisasi:[25.05,25.76,24.59,24.64],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"6c",name:"\u00b7 Auto Dispatch",sat:"%",bob:2,grp:false,
+       target:[2,2,2,2],realisasi:[20.77,22.31,18.48,14.68],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[7.7,7.7,7.7,7.7]},
+      {no:"7a",name:"\u00b7 Gangguan TM",sat:"kali",bob:5,grp:false,
+       target:[22,44,66,88],realisasi:[5,10,19,26],pencapaian:[110,110,110,110],nilai100:[5.5,5.5,5.5,5.5]},
+      {no:"7b",name:"\u00b7 Kerusakan Peralatan",sat:"Unit",bob:2,grp:false,
+       target:[2,2,2,4],realisasi:[0,0,1,1],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"8",name:"ERT Distribusi",sat:"",bob:8,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[8,8,8,8]},
+      {no:"8a",name:"\u00b7 MVOD",sat:"%",bob:6,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[6,6,6,6]},
+      {no:"8b",name:"\u00b7 MTTR Siaga 1",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4.2,4.2,4.2,6.4]},
+      {no:"9a",name:"\u00b7 Saldo Rata-rata",sat:"Rp Juta",bob:2,grp:false,
+       target:[8.64,8.64,8.64,8.64],realisasi:[0,0,0,0],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"9b",name:"\u00b7 Pelunasan PRR",sat:"Rp Juta",bob:2,grp:false,
+       target:[17.09,34.18,51.27,68.35],realisasi:[0,0,0,293.79],pencapaian:[0,0,0,110],nilai100:[0,0,0,2.2]},
+      {no:"9c",name:"\u00b7 Penghapusan PRR",sat:"",bob:2,grp:false,
+       target:[0.01,0.01,0.01,0.01],realisasi:[0.01,0.01,0.01,0.01],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"10",name:"Transaksi Energi",sat:"",bob:6,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[6.07,6.99,7.08,7.29]},
+      {no:"10a",name:"\u00b7 P2TL",sat:"kWh",bob:3,grp:false,
+       target:[44531,89062,133593,178124],realisasi:[27268,76843,118982,171035],pencapaian:[61.23,86.28,89.06,96.02],nilai100:[1.84,2.59,2.68,2.89]},
+      {no:"10b",name:"\u00b7 Ganti Meter",sat:"Unit",bob:2,grp:false,
+       target:[284,568,852,1136],realisasi:[288,662,952,1375],pencapaian:[101.4,110,110,110],nilai100:[2.03,2.2,2.2,2.2]},
+      {no:"10c",name:"\u00b7 LBKB",sat:"%",bob:1,grp:false,
+       target:[null,null,null,null],realisasi:[100,100,100,100],pencapaian:[110,110,110,110],nilai100:[2.2,2.2,2.2,2.2]},
+      {no:"11",name:"Digitalisasi",sat:"",bob:4,grp:true,
+       target:[null,null,null,null],realisasi:[null,null,null,null],pencapaian:[null,null,null,null],nilai100:[4,4,4,4]},
+      {no:"11a",name:"\u00b7 Aset Distribusi",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+      {no:"11b",name:"\u00b7 Pemeliharaan",sat:"%",bob:2,grp:false,
+       target:[100,100,100,100],realisasi:[100,100,100,100],pencapaian:[100,100,100,100],nilai100:[2,2,2,2]},
+    ]
+  },
+};
+
+let activeUnit = 'up3';
+
+function getActiveKpi() {
+  const u = ulpData[activeUnit];
+  if (!u || !u.kpi) return kpiData; // UP3
+  // Map ULP kpi format to dashboard format
+  return u.kpi.map(k => ({
+    no: k.no, name: k.name, satuan: k.sat, bobot: k.bob, isGroup: k.grp,
+    target: k.target, realisasi: k.realisasi, pencapaian: k.pencapaian, nilai100: k.nilai100
+  }));
+}
+
+function getActiveNko() {
+  return ulpData[activeUnit] ? ulpData[activeUnit].nko : nkoValues;
+}
+
+function getActiveMainKPIs() {
+  if (!activeUnit || activeUnit === 'up3') return mainKPIs;
+  // For ULPs, derive group-level KPIs from their kpi array
+  const kpi = getActiveKpi();
+  return kpi
+    .filter(k => k.isGroup && k.name && !k.name.startsWith('·') && !k.name.startsWith('-'))
+    .map(k => ({ name: k.name, bobot: k.bobot, nilai100: k.nilai100 }));
+}
+
+function switchUnit(key) {
+  activeUnit = key;
+
+  // Sidebar active state
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('nav-' + key);
+  if (btn) btn.classList.add('active');
+
+  const dash   = document.getElementById('dashboard-content');
+  const execEl = document.getElementById('exec-summary');
+
+  if (key === 'summary') {
+    // Show Executive Summary, hide dashboard
+    dash.style.display   = 'none';
+    execEl.classList.add('visible');
+    buildExecSummary();
+    return;
+  }
+
+  // Show dashboard, hide executive summary
+  dash.style.display = '';
+  execEl.classList.remove('visible');
+
+  const u = ulpData[key];
+  document.getElementById('unit-title').textContent    = u.label;
+  document.getElementById('unit-subtitle').textContent = u.subtitle + ' · Data Jan–Apr 2026';
+
+  buildNKOChart();
+  buildBobotChart();
+  buildAllLineCharts();
+  setMonth(currentMonth);
+}
+
+// ============================================================
+// EXECUTIVE SUMMARY
+// ============================================================
+function buildExecSummary() {
+  const APR = 3; // April index
+  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+
+  // All units data (UP3 + 5 ULP)
+  const allUnits = [
+    { key:'up3',       label:'UP3 Masohi',   short:'UP3 Masohi',   nko: nkoValues,                      isUP3: true  },
+    { key:'masohi',    label:'ULP Masohi',   short:'ULP Masohi',   nko: ulpData.masohi.nko,    isUP3: false },
+    { key:'kairatu',   label:'ULP Kairatu',  short:'ULP Kairatu',  nko: ulpData.kairatu.nko,   isUP3: false },
+    { key:'piru',      label:'ULP Piru',     short:'ULP Piru',     nko: ulpData.piru.nko,      isUP3: false },
+    { key:'kobisonta', label:'ULP Kobisonta',short:'ULP Kobisonta',nko: ulpData.kobisonta.nko, isUP3: false },
+    { key:'bula',      label:'ULP Bula',     short:'ULP Bula',     nko: ulpData.bula.nko,      isUP3: false },
+  ];
+
+  // Sort ULP (exclude UP3) by NKO April descending
+  const ulpRanked = allUnits
+    .filter(u => !u.isUP3)
+    .sort((a,b) => b.nko[APR] - a.nko[APR]);
+
+  // ── NKO Hero Cards ──────────────────────────────────────
+  const heroGrid = document.getElementById('es-nko-hero');
+  heroGrid.innerHTML = '';
+  allUnits.forEach(u => {
+    const nkoApr = u.nko[APR];
+    const nkoJan = u.nko[0];
+    const trend  = nkoApr - nkoJan;
+    const clr    = nkoApr >= 110 ? '#22c55e' : nkoApr >= 100 ? '#f59e0b' : '#ef4444';
+    const hc     = u.isUP3 ? 'var(--accent)' : clr;
+    const barW   = Math.min((nkoApr / 110) * 100, 100).toFixed(1);
+    const trendTxt = (trend >= 0 ? '▲ +' : '▼ ') + trend.toFixed(2) + ' dari Jan';
+    const trendClr = trend >= 0 ? '#22c55e' : '#ef4444';
+    heroGrid.innerHTML += `
+      <div class="nko-hero-card" style="--hc:${hc}">
+        ${u.isUP3 ? '<span class="nko-hero-rank" style="background:rgba(0,212,170,.15);color:var(--accent)">UP3</span>' : ''}
+        <div class="nko-hero-unit">${u.short}</div>
+        <div class="nko-hero-val" style="color:${clr}">${nkoApr.toFixed(2)}</div>
+        <div class="nko-hero-bar"><div class="nko-hero-fill" style="width:${barW}%;background:${clr}"></div></div>
+        <div class="nko-hero-trend" style="color:${trendClr}">${trendTxt}</div>
+      </div>`;
+  });
+
+  // ── Ranking Table (ULP only) ─────────────────────────────
+  const rankBody = document.getElementById('es-rank-body');
+  rankBody.innerHTML = '';
+  ulpRanked.forEach((u, i) => {
+    const nkoApr = u.nko[APR];
+    const clr    = nkoApr >= 110 ? '#22c55e' : nkoApr >= 100 ? '#f59e0b' : '#ef4444';
+    const barW   = Math.min((nkoApr / 110) * 100, 100).toFixed(1);
+    const trend  = nkoApr > u.nko[2] ? '▲' : nkoApr < u.nko[2] ? '▼' : '─';
+    const tClr   = nkoApr > u.nko[2] ? '#22c55e' : nkoApr < u.nko[2] ? '#ef4444' : '#64748b';
+    rankBody.innerHTML += `
+      <tr>
+        <td><span class="rank-medal">${medals[i]}</span></td>
+        <td style="font-weight:700;color:var(--text)">${u.short}</td>
+        <td><b style="color:${clr};font-size:15px">${nkoApr.toFixed(2)}</b></td>
+        <td style="color:var(--text-muted)">${u.nko[0].toFixed(2)}</td>
+        <td style="color:var(--text-muted)">${u.nko[1].toFixed(2)}</td>
+        <td style="color:var(--text-muted)">${u.nko[2].toFixed(2)}</td>
+        <td class="rank-bar-cell">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="rank-bar-bg" style="flex:1"><div class="rank-bar-in" style="width:${barW}%;background:${clr}"></div></div>
+            <span style="font-size:10px;color:var(--text-muted);width:28px">${barW}%</span>
+          </div>
+        </td>
+        <td style="font-size:16px;color:${tClr}">${trend}</td>
+      </tr>`;
+  });
+
+  // ── Insight Cards ────────────────────────────────────────
+  const insightGrid = document.getElementById('es-insights');
+  insightGrid.innerHTML = '';
+
+  const ulpNkos    = ulpRanked.map(u => u.nko[APR]);
+  const avgUlp     = (ulpNkos.reduce((s,v) => s+v, 0) / ulpNkos.length).toFixed(2);
+  const bestUlp    = ulpRanked[0];
+  const worstUlp   = ulpRanked[ulpRanked.length - 1];
+  const up3nko     = nkoValues[APR];
+  const ulpAbove100 = ulpRanked.filter(u => u.nko[APR] >= 100).length;
+  const ulpBelow100 = ulpRanked.filter(u => u.nko[APR] < 100).length;
+
+  const insights = [
+    {
+      title: 'NKO UP3 Masohi',
+      val: up3nko.toFixed(2),
+      sub: up3nko >= 110 ? '✅ Melampaui target 110' : up3nko >= 100 ? '🟡 Di atas nilai 100' : '🔴 Di bawah target',
+      clr: up3nko >= 110 ? '#22c55e' : up3nko >= 100 ? '#f59e0b' : '#ef4444',
+    },
+    {
+      title: 'Rata-rata NKO ULP',
+      val: avgUlp,
+      sub: `Dari 5 ULP · s.d. April 2026`,
+      clr: parseFloat(avgUlp) >= 100 ? '#22c55e' : '#f59e0b',
+    },
+    {
+      title: 'ULP Terbaik',
+      val: bestUlp.short,
+      sub: `NKO ${bestUlp.nko[APR].toFixed(2)} · ${medals[0]} Peringkat 1`,
+      clr: '#22c55e',
+    },
+    {
+      title: 'ULP Perlu Perhatian',
+      val: worstUlp.short,
+      sub: `NKO ${worstUlp.nko[APR].toFixed(2)} · Peringkat ${ulpRanked.length}`,
+      clr: '#ef4444',
+    },
+    {
+      title: 'ULP Capai ≥ 100',
+      val: `${ulpAbove100} / 5`,
+      sub: ulpAbove100 === 5 ? '✅ Semua ULP di atas 100' : `${ulpBelow100} ULP masih di bawah 100`,
+      clr: ulpAbove100 === 5 ? '#22c55e' : '#f59e0b',
+    },
+    {
+      title: 'Tren Apr vs Jan',
+      val: (() => {
+        const improved = allUnits.filter(u=>u.nko[APR]>u.nko[0]).length;
+        return `${improved} / ${allUnits.length}`;
+      })(),
+      sub: 'Unit dengan NKO meningkat dari Januari',
+      clr: '#3b82f6',
+    },
+  ];
+
+  insights.forEach(ins => {
+    insightGrid.innerHTML += `
+      <div class="insight-card">
+        <div class="insight-card-title">${ins.title}</div>
+        <div class="insight-card-val" style="color:${ins.clr}">${ins.val}</div>
+        <div class="insight-card-sub">${ins.sub}</div>
+      </div>`;
+  });
+
+  // ── Detail Table per KPI ─────────────────────────────────
+  const detailBody = document.getElementById('es-detail-body');
+  detailBody.innerHTML = '';
+
+  // Key group-level KPIs to show
+  const kpiLabels = [
+    { search: 'Penjualan Tenaga Listrik', label: 'Penjualan TL' },
+    { search: 'Susut Distribusi',         label: 'Susut Distribusi' },
+    { search: 'Keandalan Penyaluran',     label: 'Keandalan Penyaluran' },
+    { search: 'Penyelesaian',             label: 'Penyelesaian RUPTL' },
+    { search: 'Percepatan Penyambungan',  label: 'Percepatan Penyambungan' },
+    { search: 'Pelayanan Pelanggan',      label: 'Pelayanan Pelanggan' },
+    { search: 'Keandalan JTM',            label: 'Keandalan JTM' },
+    { search: 'ERT Distribusi',           label: 'ERT Distribusi' },
+    { search: 'Management Cash In',       label: 'Management Cash In' },
+    { search: 'Transaksi Energi',         label: 'Transaksi Energi' },
+    { search: 'Digitalisasi',             label: 'Digitalisasi' },
+  ];
+
+  // Helper: get Nilai110 for a unit/KPI
+  function getN110(unitKey, kpiSearch) {
+    let kpiArr;
+    if (unitKey === 'up3') {
+      kpiArr = kpiData;
+    } else {
+      const raw = ulpData[unitKey].kpi;
+      kpiArr = raw.map(k => ({ ...k, satuan: k.sat, bobot: k.bob, isGroup: k.grp }));
+    }
+    const found = kpiArr.find(k =>
+      k.name.toLowerCase().includes(kpiSearch.toLowerCase())
+    );
+    if (!found) return null;
+    const v = found.nilai100[APR];
+    return v !== null && v !== undefined ? v : null;
+  }
+
+  // Max N110 per KPI for bar scaling
+  const unitKeys = ['up3','masohi','kairatu','piru','kobisonta','bula'];
+
+  kpiLabels.forEach(kpi => {
+    const vals = unitKeys.map(k => getN110(k, kpi.search));
+    const maxV = Math.max(...vals.filter(v=>v!==null), 0.01);
+
+    let row = `<tr><td>${kpi.label}</td>`;
+    vals.forEach(v => {
+      if (v === null || v === undefined) {
+        row += `<td><span class="ud-chip" style="color:var(--text-muted)">–</span></td>`;
+      } else {
+        const pct  = (v / maxV * 100).toFixed(0);
+        const clr  = v >= 5 ? 'ud-green' : v >= 2 ? 'ud-yellow' : 'ud-red';
+        row += `<td>
+          <span class="ud-chip ${clr}">${v.toFixed(2)}</span>
+        </td>`;
+      }
+    });
+    row += `</tr>`;
+    detailBody.innerHTML += row;
+  });
+
+  // NKO total row
+  detailBody.innerHTML += `
+    <tr style="background:rgba(0,212,170,.05);font-weight:700">
+      <td style="color:var(--accent)">TOTAL NKO</td>
+      ${unitKeys.map(k => {
+        const nko = k === 'up3' ? nkoValues[APR] : ulpData[k].nko[APR];
+        const clr = nko >= 110 ? 'ud-green' : nko >= 100 ? 'ud-yellow' : 'ud-red';
+        return `<td><span class="ud-chip ${clr}">${nko.toFixed(2)}</span></td>`;
+      }).join('')}
+    </tr>`;
+}
+
 // ============================================================
 // DATA
 // ============================================================
@@ -1114,24 +2020,29 @@ function buildNKOChart() {
   const ctx = document.getElementById('nkoTrendChart').getContext('2d');
   if (charts.nko) charts.nko.destroy();
   const c = getChartColors();
+  const nkoVals = getActiveNko();
+
   charts.nko = new Chart(ctx, {
     type: 'line',
     data: {
       labels: months,
       datasets: [{
         label: 'NKO',
-        data: nkoValues,
+        data: nkoVals,
         borderColor: COLORS.teal,
         backgroundColor: 'rgba(0,212,170,0.08)',
         borderWidth: 2.5,
-        pointBackgroundColor: COLORS.teal,
-        pointRadius: 5,
+        pointBackgroundColor: nkoVals.map(v =>
+          v >= 110 ? COLORS.green : v >= 100 ? COLORS.amber : COLORS.red
+        ),
+        pointRadius: 6,
+        pointHoverRadius: 8,
         tension: 0.4,
         fill: true
       },{
-        label: 'Target (110)',
+        label: 'Target 110',
         data: [110,110,110,110],
-        borderColor: 'rgba(0,212,170,0.4)',
+        borderColor: 'rgba(0,212,170,0.5)',
         borderDash: [6,4],
         borderWidth: 1.5,
         pointRadius: 0,
@@ -1139,7 +2050,7 @@ function buildNKOChart() {
       },{
         label: 'Nilai 100',
         data: [100,100,100,100],
-        borderColor: 'rgba(239,68,68,0.4)',
+        borderColor: 'rgba(239,68,68,0.45)',
         borderDash: [4,3],
         borderWidth: 1,
         pointRadius: 0,
@@ -1148,10 +2059,21 @@ function buildNKOChart() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: c.text, font: { family:'DM Sans', size:12 } } } },
+      plugins: {
+        legend: { labels: { color: c.text, font: { family:'DM Sans', size:12 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${typeof ctx.raw === 'number' ? ctx.raw.toFixed(2) : ctx.raw}`
+          }
+        }
+      },
       scales: {
         x: { ticks: { color: c.textMuted, font:{family:'DM Sans'} }, grid: { color: c.grid } },
-        y: { min: 90, max: 115, ticks: { color: c.textMuted, font:{family:'DM Sans'} }, grid: { color: c.grid } }
+        y: {
+          min: 80, max: 115,
+          ticks: { color: c.textMuted, font:{family:'DM Sans'}, stepSize: 5 },
+          grid: { color: c.grid }
+        }
       }
     }
   });
@@ -1166,9 +2088,9 @@ function buildBobotChart() {
   charts.bobot = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: mainKPIs.map(k => k.name),
+      labels: getActiveMainKPIs().map(k => k.name),
       datasets: [{
-        data: mainKPIs.map(k => k.bobot),
+        data: getActiveMainKPIs().map(k => k.bobot),
         backgroundColor: colorList,
         borderColor: '#111827',
         borderWidth: 2
@@ -1192,23 +2114,24 @@ function buildNilai100Chart(m) {
   const ctx = document.getElementById('nilai100Chart').getContext('2d');
   if (charts.nilai) charts.nilai.destroy();
   const c = getChartColors();
-  const colors = mainKPIs.map((k,i) => {
+  const mKPIs = getActiveMainKPIs();
+  const colors = mKPIs.map((k,i) => {
     const ratio = k.nilai100[m] / k.bobot;
     return ratio >= 1 ? COLORS.green : ratio >= 0.8 ? COLORS.amber : COLORS.red;
   });
   charts.nilai = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: mainKPIs.map(k => k.name.length > 18 ? k.name.substring(0,18)+'…' : k.name),
+      labels: getActiveMainKPIs().map(k => k.name.length > 18 ? k.name.substring(0,18)+'…' : k.name),
       datasets: [{
         label: 'Nilai 110',
-        data: mainKPIs.map(k => k.nilai100[m]),
+        data: mKPIs.map(k => k.nilai100[m]),
         backgroundColor: colors,
         borderRadius: 4,
         borderSkipped: false
       },{
         label: 'Maks Bobot',
-        data: mainKPIs.map(k => k.bobot),
+        data: getActiveMainKPIs().map(k => k.bobot),
         backgroundColor: 'rgba(255,255,255,0.06)',
         borderColor: 'rgba(255,255,255,0.15)',
         borderWidth: 1,
@@ -1325,25 +2248,47 @@ function makeGaugeSVG(pct) {
 // BUILD GAUGE CARDS
 // ============================================================
 function buildGauges(m) {
+  // Build gaugeData by searching KPI names (works for all units)
+  function findKpi(searchName) {
+    const kpis = getActiveKpi();
+    const k = kpis.find(k => !k.isGroup && k.name.toLowerCase().includes(searchName.toLowerCase()));
+    if (!k) return { pct: null, target: null, realisasi: null };
+    return { pct: k.pencapaian[m], target: k.target[m], realisasi: k.realisasi[m] };
+  }
+  const _pj = findKpi('penjualan tenaga');
+  const _sd = findKpi('susut distribusi');
+  const _si = findKpi('saidi');
+  const _sf = findKpi('saifi');
+  const _en = findKpi('ens');
+  const _pp = findKpi('penambahan pelanggan') || findKpi('jumlah penambahan');
+  const _dt = findKpi('daya tersambung');
+  const _bp = findKpi('biaya penyambungan');
+  const _pl = findKpi('lisdes') ;
+  const _rt = findKpi('response time');
+  const _ad = findKpi('auto dispatch');
+  const _gt = findKpi('gangguan tm');
+  const _p2 = findKpi('p2tl');
+  const _gm = findKpi('ganti meter');
+  const _pr = findKpi('pelunasan prr');
+  const _ai = findKpi('anggaran investasi') || findKpi('anggaran');
+
   const gaugeData = [
-    { name:'Penjualan Tenaga Listrik',     satuan:'GWh',       pct:kpiData[0].pencapaian[m],  target:kpiData[0].target[m],  realisasi:kpiData[0].realisasi[m]  },
-    { name:'Susut Distribusi Tanpa E-min', satuan:'%',         pct:kpiData[1].pencapaian[m],  target:kpiData[1].target[m],  realisasi:kpiData[1].realisasi[m]  },
-    { name:'SAIDI',                        satuan:'mnt/plg',   pct:kpiData[3].pencapaian[m],  target:kpiData[3].target[m],  realisasi:kpiData[3].realisasi[m]  },
-    { name:'SAIFI',                        satuan:'kali/plg',  pct:kpiData[4].pencapaian[m],  target:kpiData[4].target[m],  realisasi:kpiData[4].realisasi[m]  },
-    { name:'ENS',                          satuan:'MWh',       pct:kpiData[5].pencapaian[m],  target:kpiData[5].target[m],  realisasi:kpiData[5].realisasi[m]  },
-    { name:'Penambahan Pelanggan',         satuan:'Pelanggan', pct:kpiData[10].pencapaian[m], target:kpiData[10].target[m], realisasi:kpiData[10].realisasi[m] },
-    { name:'Penambahan Daya Tersambung',   satuan:'MVA',       pct:kpiData[11].pencapaian[m], target:kpiData[11].target[m], realisasi:kpiData[11].realisasi[m] },
-    { name:'Biaya Penyambungan',           satuan:'Rp M',      pct:kpiData[12].pencapaian[m], target:kpiData[12].target[m], realisasi:kpiData[12].realisasi[m] },
-    { name:'Pelanggan Lisdes',             satuan:'Pelanggan', pct:kpiData[13].pencapaian[m], target:kpiData[13].target[m], realisasi:kpiData[13].realisasi[m] },
-    { name:'kWh Penjualan Lisdes',         satuan:'kWh',       pct:kpiData[14].pencapaian[m], target:kpiData[14].target[m], realisasi:kpiData[14].realisasi[m] },
-    { name:'Response Time Gangguan',       satuan:'menit',     pct:kpiData[17].pencapaian[m], target:kpiData[17].target[m], realisasi:kpiData[17].realisasi[m] },
-    { name:'Success Rate Auto Dispatch',   satuan:'%',         pct:kpiData[18].pencapaian[m], target:kpiData[18].target[m], realisasi:kpiData[18].realisasi[m] },
-    { name:'Transaksi PLN Mobile',         satuan:'Transaksi', pct:kpiData[19].pencapaian[m], target:kpiData[19].target[m], realisasi:kpiData[19].realisasi[m] },
-    { name:'Gangguan TM Permanen',         satuan:'kali',      pct:kpiData[21].pencapaian[m], target:kpiData[21].target[m], realisasi:kpiData[21].realisasi[m] },
-    { name:'Perolehan kWh P2TL',           satuan:'kWh',       pct:kpiData[36].pencapaian[m], target:kpiData[36].target[m], realisasi:kpiData[36].realisasi[m] },
-    { name:'Penyelesaian Ganti Meter',     satuan:'Unit',      pct:kpiData[37].pencapaian[m], target:kpiData[37].target[m], realisasi:kpiData[37].realisasi[m] },
-    { name:'Pelunasan PRR',                satuan:'Rp Juta',   pct:kpiData[28].pencapaian[m], target:kpiData[28].target[m], realisasi:kpiData[28].realisasi[m] },
-    { name:'Anggaran Investasi (RKAP)',    satuan:'%',         pct:kpiData[31].pencapaian[m], target:kpiData[31].target[m], realisasi:kpiData[31].realisasi[m] },
+    { name:'Penjualan Tenaga Listrik',    satuan:'GWh',      pct:_pj.pct, target:_pj.target, realisasi:_pj.realisasi },
+    { name:'Susut Distribusi',            satuan:'%',        pct:_sd.pct, target:_sd.target, realisasi:_sd.realisasi },
+    { name:'SAIDI',                       satuan:'mnt/plg',  pct:_si.pct, target:_si.target, realisasi:_si.realisasi },
+    { name:'SAIFI',                       satuan:'kali/plg', pct:_sf.pct, target:_sf.target, realisasi:_sf.realisasi },
+    { name:'ENS',                         satuan:'MWh',      pct:_en.pct, target:_en.target, realisasi:_en.realisasi },
+    { name:'Penambahan Pelanggan',        satuan:'Plg',      pct:_pp.pct, target:_pp.target, realisasi:_pp.realisasi },
+    { name:'Daya Tersambung',             satuan:'MVA',      pct:_dt.pct, target:_dt.target, realisasi:_dt.realisasi },
+    { name:'Biaya Penyambungan',          satuan:'Rp M',     pct:_bp.pct, target:_bp.target, realisasi:_bp.realisasi },
+    { name:'Pelanggan Lisdes',            satuan:'Plg',      pct:_pl.pct, target:_pl.target, realisasi:_pl.realisasi },
+    { name:'Response Time',               satuan:'menit',    pct:_rt.pct, target:_rt.target, realisasi:_rt.realisasi },
+    { name:'Auto Dispatch',               satuan:'%',        pct:_ad.pct, target:_ad.target, realisasi:_ad.realisasi },
+    { name:'Gangguan TM',                 satuan:'kali',     pct:_gt.pct, target:_gt.target, realisasi:_gt.realisasi },
+    { name:'Perolehan kWh P2TL',          satuan:'kWh',      pct:_p2.pct, target:_p2.target, realisasi:_p2.realisasi },
+    { name:'Ganti Meter',                 satuan:'Unit',     pct:_gm.pct, target:_gm.target, realisasi:_gm.realisasi },
+    { name:'Pelunasan PRR',               satuan:'Rp Juta',  pct:_pr.pct, target:_pr.target, realisasi:_pr.realisasi },
+    { name:'Anggaran Investasi',          satuan:'%',        pct:_ai.pct, target:_ai.target, realisasi:_ai.realisasi },
   ];
 
   const grid = document.getElementById('gauge-grid');
@@ -1370,13 +2315,29 @@ function buildGauges(m) {
 // INDIVIDUAL CHARTS
 // ============================================================
 function buildLineChart(id, key, targetKey, realKey, color, labels) {
-  const ctx = document.getElementById(id).getContext('2d');
+  if (key < 0) return;
+  const ctxEl = document.getElementById(id);
+  if (!ctxEl) return;
+  const ctx = ctxEl.getContext('2d');
   if (charts[id]) charts[id].destroy();
   const c = getChartColors();
-  const d = kpiData[key];
-  // Check if values are large (>= 1000) to format ticks
-  const maxVal = Math.max(...d.realisasi.filter(v=>v!==null), ...d.target.filter(v=>v!==null));
-  const isLarge = maxVal >= 1000;
+  const kpiArr = getActiveKpi();
+  if (key >= kpiArr.length) return;
+  const d = kpiArr[key];
+
+  // Gather all non-null values to determine scale
+  const realVals = (d.realisasi||[]).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
+  const targVals = (d.target||[]).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
+  const allVals  = [...realVals, ...targVals];
+  const maxVal   = allVals.length ? Math.max(...allVals) : 0;
+  const minVal   = allVals.length ? Math.min(...allVals) : 0;
+  const isLarge  = maxVal >= 1000;
+  const hasNeg   = minVal < 0;
+
+  // Y-axis: auto when negatives exist, otherwise start from 0
+  const yAxis = hasNeg
+    ? { ticks:{color:c.textMuted,font:{family:'DM Sans',size:11},callback:v=>isLarge?v.toLocaleString('id-ID'):v}, grid:{color:c.grid} }
+    : { min:0, ticks:{color:c.textMuted,font:{family:'DM Sans',size:11},callback:v=>isLarge?v.toLocaleString('id-ID'):v}, grid:{color:c.grid} };
 
   charts[id] = new Chart(ctx, {
     type: 'line',
@@ -1413,34 +2374,41 @@ function buildLineChart(id, key, targetKey, realKey, color, labels) {
         legend: { labels: { color: c.text, font:{family:'DM Sans', size:11} } },
         tooltip: {
           callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${isLarge ? ctx.raw.toLocaleString('id-ID') : ctx.raw}`
+            label: ctx => ` ${ctx.dataset.label}: ${isLarge ? ctx.raw?.toLocaleString('id-ID') : ctx.raw}`
           }
         }
       },
       scales: {
-        x: { ticks:{color: c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color: c.grid} },
-        y: {
-          ticks:{
-            color: c.textMuted,
-            font:{family:'DM Sans',size:11},
-            callback: v => isLarge ? v.toLocaleString('id-ID') : v
-          },
-          grid:{color: c.grid}
-        }
+        x: { ticks:{color:c.textMuted, font:{family:'DM Sans',size:11}}, grid:{color:c.grid} },
+        y: yAxis
       }
     }
   });
 }
 
+function findKpiIdx(searchName) {
+  return getActiveKpi().findIndex(k => !k.isGroup && k.name.toLowerCase().includes(searchName.toLowerCase()));
+}
+
 function buildAllLineCharts() {
-  buildLineChart('chartPenjualan', 0,  null, null, COLORS.teal);
-  buildLineChart('chartSusut',     1,  null, null, COLORS.amber);
-  buildLineChart('chartSAIDI',     3,  null, null, COLORS.blue);
-  buildLineChart('chartSAIFI',     4,  null, null, COLORS.purple);
-  buildLineChart('chartPelanggan', 10, null, null, COLORS.green);
-  buildLineChart('chartP2TL',      36, null, null, COLORS.cyan);
-  buildLineChart('chartMeter',     11, null, null, COLORS.orange);
-  buildLineChart('chartGangguan',  21, null, null, COLORS.rose);
+  function bc(id, names, color) {
+    // Try each name variant until found
+    for (const name of names) {
+      const idx = findKpiIdx(name);
+      if (idx >= 0) { buildLineChart(id, idx, null, null, color); return; }
+    }
+    // Not found — clear the chart canvas
+    const el = document.getElementById(id);
+    if (el && charts[id]) { charts[id].destroy(); delete charts[id]; }
+  }
+  bc('chartPenjualan', ['penjualan tenaga'],                       COLORS.teal);
+  bc('chartSusut',     ['susut distribusi'],                       COLORS.amber);
+  bc('chartSAIDI',     ['saidi'],                                  COLORS.blue);
+  bc('chartSAIFI',     ['saifi'],                                  COLORS.purple);
+  bc('chartPelanggan', ['jumlah penambahan pel','penambahan pelanggan'],COLORS.green);
+  bc('chartP2TL',      ['p2tl','perolehan kwh'],                   COLORS.cyan);
+  bc('chartMeter',     ['daya tersambung','penambahan daya'],      COLORS.orange);
+  bc('chartGangguan',  ['gangguan tm'],                            COLORS.rose);
 }
 
 // ============================================================
@@ -1451,7 +2419,7 @@ function buildTable(m) {
   tbody.innerHTML = '';
   document.getElementById('table-month-label').textContent = months[m] + ' 2026';
 
-  kpiData.forEach(k => {
+  getActiveKpi().forEach(k => {
     const tr = document.createElement('tr');
     if (k.isGroup) tr.className = 'group-row';
 
@@ -1492,11 +2460,11 @@ function buildTable(m) {
 // SUMMARY CARDS
 // ============================================================
 function buildSummaryCards(m) {
-  document.getElementById('sum-nko').textContent = nkoValues[m].toFixed(2);
-  document.getElementById('nko-display').textContent = nkoValues[m].toFixed(2);
+  document.getElementById('sum-nko').textContent = getActiveNko()[m].toFixed(2);
+  document.getElementById('nko-display').textContent = getActiveNko()[m].toFixed(2);
   document.getElementById('nko-month-label').textContent = months[m] + ' 2026';
 
-  const nonGroupItems = kpiData.filter(k => !k.isGroup && k.pencapaian[m] !== null && !isNaN(k.pencapaian[m]));
+  const nonGroupItems = getActiveKpi().filter(k => !k.isGroup && k.pencapaian[m] !== null && !isNaN(k.pencapaian[m]));
   const tercapai  = nonGroupItems.filter(k => k.pencapaian[m] >= 100).length;
   const perhatian = nonGroupItems.filter(k => k.pencapaian[m] < 100);
   const avg = nonGroupItems.reduce((s,k) => s + Math.min(k.pencapaian[m],110), 0) / nonGroupItems.length;
@@ -1506,7 +2474,7 @@ function buildSummaryCards(m) {
   document.getElementById('sum-perhatian').textContent = perhatian.length;
 
   // NKO badge
-  const nko = nkoValues[m];
+  const nko = getActiveNko()[m];
   const nkoBadge = document.getElementById('sum-nko-badge');
   if (nko >= 110) { nkoBadge.className = 'card-badge badge-green'; nkoBadge.textContent = '✓ Melampaui Target 110'; }
   else if (nko >= 100) { nkoBadge.className = 'card-badge badge-yellow'; nkoBadge.textContent = '▲ Di atas Nilai 100'; }
@@ -1600,9 +2568,40 @@ function setMonth(m) {
 // ============================================================
 // INIT
 // ============================================================
+// ============================================================
+// SIDEBAR TOGGLE
+// ============================================================
+function toggleSidebar() {
+  const layout = document.getElementById('app-layout');
+  const collapsed = layout.classList.toggle('sb-collapsed');
+  localStorage.setItem('sbCollapsed', collapsed ? '1' : '0');
+
+  // Swap icon: hamburger ↔ arrow-right
+  const icon = document.getElementById('sb-toggle-icon');
+  if (collapsed) {
+    icon.innerHTML = `<polyline points="9 18 15 12 9 6"/>`;
+  } else {
+    icon.innerHTML = `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`;
+  }
+
+  // Rebuild charts after transition so they fit new width
+  setTimeout(() => {
+    Object.values(charts).forEach(c => { try { c.resize(); } catch(e){} });
+  }, 280);
+}
+
 function init() {
   // Restore saved theme
   const savedTheme = localStorage.getItem('dashTheme') || 'dark';
+  // Restore sidebar collapsed state
+  if (localStorage.getItem('sbCollapsed') === '1') {
+    const layout = document.getElementById('app-layout');
+    if (layout) {
+      layout.classList.add('sb-collapsed');
+      const icon = document.getElementById('sb-toggle-icon');
+      if (icon) icon.innerHTML = '<polyline points="9 18 15 12 9 6"/>';
+    }
+  }
   if (savedTheme === 'light') {
     document.documentElement.classList.add('light');
     document.getElementById('btn-dark').classList.remove('active');
@@ -1616,5 +2615,7 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
+</div><!-- end main-content -->
+</div><!-- end app-layout -->
 </body>
 </html>
