@@ -2934,117 +2934,150 @@ function applyExportStyles(enable) {
 }
 
 async function renderUnitToCanvas(unitKey) {
-  // ── Strategy: force a fixed desktop-width layout for rendering ──────
-  // On mobile, the live layout is narrow → charts tiny → blurry PDF.
-  // We temporarily override the viewport-sensitive CSS so the dashboard
-  // renders at a fixed 1280px wide regardless of screen size.
-
-  const CAPTURE_W = 1280;   // logical CSS px width we simulate
-  const SCALE     = 2;      // html2canvas scale factor (for sharpness)
+  const CAPTURE_W = 1200;   // fixed render width (CSS px)
+  const SCALE     = 2;      // retina-quality output
   const bg        = resolveCSSVar('--bg') || '#0a0f1e';
 
-  // 1. Collapse sidebar & hide chrome so it doesn't appear in export
-  document.getElementById('app-layout').classList.add('sb-collapsed');
-  document.getElementById('sb-toggle-btn').style.display = 'none';
-  document.querySelector('.sidebar').style.display       = 'none';
-  await delay(80);
+  // ── Step 1: prepare DOM ───────────────────────────────────────────────
+  // Hide chrome that must not appear in export
+  const layout    = document.getElementById('app-layout');
+  const toggleBtn = document.getElementById('sb-toggle-btn');
+  const sidebar   = document.querySelector('.sidebar');
+  layout.classList.add('sb-collapsed');
+  toggleBtn.style.display = 'none';
+  sidebar.style.display   = 'none';
+  document.getElementById('export-modal-backdrop').classList.remove('open');
+  await delay(60);
 
-  // 2. Temporarily lock layout to desktop width
-  //    We inject a style that overrides responsive breakpoints
-  const lockId  = '__layout_lock__';
-  const lockCss = `
-    #${lockId}_ref { display:none }
-    .main-content {
-      margin-left: 0 !important;
-      width: ${CAPTURE_W}px !important;
-      min-width: ${CAPTURE_W}px !important;
-    }
-    /* Force desktop grid layouts */
-    .charts-grid     { grid-template-columns: repeat(2, 1fr) !important; }
-    .speedometers-grid { grid-template-columns: repeat(4, 1fr) !important; }
-    .summary-grid    { grid-template-columns: repeat(4, 1fr) !important; }
-    .nko-hero-grid   { grid-template-columns: repeat(6, 1fr) !important; }
-    .insight-grid    { grid-template-columns: repeat(3, 1fr) !important; }
-    header           { flex-direction: row !important; }
-    .header-right    { align-items: flex-end !important; }
-    /* Make chart canvases re-render at fixed size */
-    .chart-wrap      { height: 280px !important; }
-    .chart-card-sm .chart-wrap { height: 200px !important; }
-  `;
+  // ── Step 2: inject fixed-width layout CSS ─────────────────────────────
+  // Overrides ALL responsive breakpoints so layout = desktop regardless of screen
+  const lockId = '__layout_lock__';
   let lockStyle = document.getElementById(lockId);
   if (!lockStyle) {
     lockStyle = document.createElement('style');
     lockStyle.id = lockId;
     document.head.appendChild(lockStyle);
   }
-  lockStyle.textContent = lockCss;
-  await delay(60);
+  lockStyle.textContent = `
+    html, body { overflow: hidden !important; }
+    .main-content {
+      margin-left: 0 !important; width: ${CAPTURE_W}px !important;
+      min-width: ${CAPTURE_W}px !important; max-width: ${CAPTURE_W}px !important;
+    }
+    #dashboard-content, #exec-summary {
+      width: ${CAPTURE_W}px !important; max-width: ${CAPTURE_W}px !important;
+    }
+    .wrapper { max-width: ${CAPTURE_W}px !important; padding: 0 20px !important; }
+    /* Force 2-column chart grid */
+    .charts-grid       { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+    /* Force 4-column gauge grid */
+    .speedometers-grid { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 12px !important; }
+    /* Force 4-column summary */
+    .summary-grid      { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 12px !important; }
+    /* Exec summary grids */
+    .nko-hero-grid { display: grid !important; grid-template-columns: repeat(6,1fr) !important; gap: 10px !important; }
+    .insight-grid  { display: grid !important; grid-template-columns: repeat(3,1fr) !important; gap: 12px !important; }
+    /* Fixed chart heights */
+    .chart-wrap            { height: 240px !important; min-height: 240px !important; }
+    .chart-card-sm .chart-wrap { height: 200px !important; min-height: 200px !important; }
+    /* Gauge SVG wrap */
+    .gauge-canvas-wrap     { width: 100% !important; aspect-ratio: 2/1 !important; }
+    /* Header layout */
+    header { flex-direction: row !important; flex-wrap: nowrap !important; padding-top: 20px !important; }
+    .header-right { align-items: flex-end !important; }
+    /* Month selector */
+    .month-selector { flex-wrap: nowrap !important; }
+    /* Table scroll */
+    [style*="overflow-x:auto"], [style*="overflow-x: auto"] { overflow-x: visible !important; }
+  `;
+  await delay(80);
 
-  // 3. Apply theme colour overrides
+  // ── Step 3: apply theme colour overrides ──────────────────────────────
   applyExportStyles(true);
   await delay(60);
 
-  // 4. Switch unit, set month, wait for charts to render
+  // ── Step 4: switch to target unit & month ─────────────────────────────
   let el;
   if (unitKey === 'summary') {
     switchUnit('summary');
-    await delay(1000);
+    await delay(800);
     el = document.getElementById('exec-summary');
   } else {
     switchUnit(unitKey);
-    await delay(500);
+    await delay(400);
     setMonth(3);
-    await delay(800);
+    await delay(600);
     el = document.getElementById('dashboard-content');
   }
 
-  // 5. Force all Chart.js charts to resize to their containers
-  Object.values(charts).forEach(c => {
-    try { c.resize(); } catch(_) {}
-  });
-  await delay(400); // let charts finish rendering
+  // ── Step 5: DESTROY all Chart.js, force container to new width, REBUILD ─
+  // This is the key fix: charts must be created AFTER the new layout is set.
+  // Simply calling c.resize() is not enough on mobile — chart internals cache
+  // the old container size. Destroy + rebuild forces a clean render.
+  const savedUnit  = activeUnit;
+  const savedMonth = currentMonth;
 
-  // 6. Scroll to top so scrollY offset is clean
+  // Destroy
+  Object.keys(charts).forEach(k => {
+    try { charts[k].destroy(); delete charts[k]; } catch(_) {}
+  });
+  await delay(80);
+
+  // Rebuild Charts.js charts at new size
+  // (SVG gauges auto-resize with CSS; only canvas-based charts need this)
+  buildNKOChart();
+  buildBobotChart();
+  buildNilai100Chart(savedMonth);
+  buildAllLineCharts();
+  await delay(600); // wait for Chart.js to finish drawing
+
+  // Rebuild SVG gauges (they need the correct container width too)
+  buildGauges(savedMonth);
+  await delay(200);
+
+  // ── Step 6: capture ───────────────────────────────────────────────────
   window.scrollTo(0, 0);
   await delay(60);
 
-  // 7. Capture
   let canvas;
   try {
     canvas = await html2canvas(el, {
       scale          : SCALE,
       useCORS        : true,
+      allowTaint     : true,
       logging        : false,
       backgroundColor: bg,
       windowWidth    : CAPTURE_W,
-      windowHeight   : el.scrollHeight,
-      x              : 0,
-      y              : 0,
+      windowHeight   : Math.ceil(el.getBoundingClientRect().height),
+      x: el.getBoundingClientRect().left,
+      y: el.getBoundingClientRect().top + window.scrollY,
       scrollX        : 0,
       scrollY        : 0,
-      onclone        : (doc) => {
-        // In the cloned document, make all canvas elements copy pixel data
-        doc.querySelectorAll('canvas').forEach(c => {
-          try {
-            const orig = document.getElementById(c.id);
-            if (orig) {
-              const ctx2 = c.getContext('2d');
-              ctx2.drawImage(orig, 0, 0);
-            }
-          } catch(_) {}
+      onclone(clonedDoc) {
+        // Copy live canvas pixel data into the cloned document
+        // (html2canvas clones DOM but not canvas pixel content)
+        clonedDoc.querySelectorAll('canvas[id]').forEach(cloneCanvas => {
+          const liveCanvas = document.getElementById(cloneCanvas.id);
+          if (!liveCanvas) return;
+          cloneCanvas.width  = liveCanvas.width;
+          cloneCanvas.height = liveCanvas.height;
+          const ctx = cloneCanvas.getContext('2d');
+          if (ctx) ctx.drawImage(liveCanvas, 0, 0);
         });
       },
-      ignoreElements : e =>
-        e.id === '__export_style__' ||
-        e.id === lockId ||
-        (e.classList && e.classList.contains('no-print'))
+      ignoreElements(e) {
+        const id = e.id || '';
+        if (id === '__export_style__' || id === lockId) return true;
+        if (e.classList && e.classList.contains('no-print')) return true;
+        return false;
+      }
     });
   } finally {
-    // 8. Restore everything
+    // ── Step 7: restore everything ────────────────────────────────────────
     applyExportStyles(false);
     lockStyle.textContent = '';
-    document.getElementById('sb-toggle-btn').style.display = '';
-    document.querySelector('.sidebar').style.display       = '';
+    toggleBtn.style.display = '';
+    sidebar.style.display   = '';
   }
 
   return canvas;
@@ -3156,17 +3189,23 @@ async function startExport() {
   } catch (err) {
     console.error('Export error:', err);
     alert('Gagal export: ' + err.message);
-    // Ensure lock style is cleaned up on error
     const ls = document.getElementById('__layout_lock__');
     if (ls) ls.textContent = '';
     applyExportStyles(false);
     document.getElementById('sb-toggle-btn').style.display = '';
     document.querySelector('.sidebar').style.display = '';
   } finally {
-    // Restore app state
+    // Restore app state & rebuild charts at original layout
     document.getElementById('app-layout').classList.remove('sb-collapsed');
     switchUnit(originalUnit);
-    await delay(400);
+    // Rebuild charts so they fit the restored (possibly mobile) layout
+    await delay(300);
+    buildNKOChart();
+    buildBobotChart();
+    buildAllLineCharts();
+    buildNilai100Chart(currentMonth);
+    buildGauges(currentMonth);
+    await delay(200);
     document.getElementById('export-modal-backdrop').classList.add('open');
     btn.disabled    = false;
     btn.textContent = '⬇ Export PDF';
