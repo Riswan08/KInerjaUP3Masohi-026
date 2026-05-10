@@ -2354,6 +2354,10 @@ function makeGaugeSVG(pct) {
   const yelPath = donut(80,   90, RO, RI);
   const grnPath = donut(90,  110, RO, RI);
 
+  // Tick colors adapt to theme
+  const tickClr  = resolveCSSVar('--text-muted') || '#64748b';
+  const tickLine = resolveCSSVar('--text-dim')   || '#94a3b8';
+
   // Tick marks
   const majors = [0,20,40,60,80,90,100,110];
   const minors  = [10,30,50,70];
@@ -2362,7 +2366,7 @@ function makeGaugeSVG(pct) {
     const d = vDeg(v);
     const [x1,y1] = pt(d, RO+2);
     const [x2,y2] = pt(d, RI-1);
-    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="white" stroke-width="1" opacity="0.35"/>`;
+    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${tickLine}" stroke-width="1" opacity="0.5"/>`;
   });
   majors.forEach(v => {
     const d = vDeg(v);
@@ -2370,8 +2374,8 @@ function makeGaugeSVG(pct) {
     const [x2,y2] = pt(d, RI-4);
     const [lx,ly] = pt(d, RI-16);
     const anc = lx < cx-5 ? 'end' : lx > cx+5 ? 'start' : 'middle';
-    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="white" stroke-width="2" opacity="0.85"/>`;
-    ticks += `<text x="${lx}" y="${ly}" text-anchor="${anc}" dominant-baseline="middle" font-size="9" font-weight="700" fill="white" opacity="0.92" font-family="DM Sans,sans-serif">${v}</text>`;
+    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${tickLine}" stroke-width="2" opacity="0.85"/>`;
+    ticks += `<text x="${lx}" y="${ly}" text-anchor="${anc}" dominant-baseline="middle" font-size="9" font-weight="700" fill="${tickClr}" opacity="0.92" font-family="DM Sans,sans-serif">${v}</text>`;
   });
 
   // Needle
@@ -2386,15 +2390,18 @@ function makeGaugeSVG(pct) {
   const pctTextClr = val>=90?'#4ade80':val>=80?'#fbbf24':'#f87171';
   const label = val>=110?'110':Number.isInteger(val)?String(val):val.toFixed(1);
 
+  const gaugeTrackClr = resolveCSSVar('--surface2') || '#1e293b';
+  const gaugeSurface  = resolveCSSVar('--surface')  || '#111827';
+
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-    <path d="${bgPath}"  fill="#1e293b"/>
+    <path d="${bgPath}"  fill="${gaugeTrackClr}"/>
     <path d="${redPath}" fill="#dc2626"/>
     <path d="${yelPath}" fill="#f59e0b"/>
     <path d="${grnPath}" fill="#16a34a"/>
     ${ticks}
     <polygon points="${ntx},${nty} ${nl[0]},${nl[1]} ${nbx},${nby} ${nr[0]},${nr[1]}"
       fill="white" stroke="rgba(0,0,0,0.3)" stroke-width="0.5" stroke-linejoin="round"/>
-    <circle cx="${cx}" cy="${cy}" r="10" fill="#1e293b" stroke="white" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy}" r="10" fill="${gaugeSurface}" stroke="white" stroke-width="2"/>
     <circle cx="${cx}" cy="${cy}" r="4.5" fill="${needleClr}"/>
     <rect x="${cx-26}" y="${cy-54}" width="52" height="20" rx="10" fill="rgba(0,0,0,0.6)"/>
     <text x="${cx}" y="${cy-44}" text-anchor="middle" dominant-baseline="middle"
@@ -2692,7 +2699,7 @@ function refreshAllCharts() {
   buildBobotChart();
   buildAllLineCharts();
   buildNilai100Chart(currentMonth);
-  buildGauges(currentMonth);
+  buildGauges(currentMonth); // rebuild SVG gauges so tick/bg colors update with theme
 }
 
 function setTheme(mode) {
@@ -2851,31 +2858,126 @@ function setProgress(pct, label) {
   document.getElementById('export-progress-label').textContent = label;
 }
 
-async function renderUnitToCanvas(unitKey) {
-  // Switch to the unit
-  if (unitKey === 'summary') {
-    await new Promise(resolve => {
-      switchUnit('summary');
-      setTimeout(resolve, 800);
-    });
-    return await html2canvas(document.getElementById('exec-summary'), {
-      scale: 1.5, useCORS: true, backgroundColor: null, logging: false,
-      windowWidth: 1200, scrollY: 0
-    });
-  } else {
-    await new Promise(resolve => {
-      switchUnit(unitKey);
-      setTimeout(resolve, 400);
-    });
-    // Set to April (latest data)
-    setMonth(3);
-    await new Promise(resolve => setTimeout(resolve, 600));
+// Helper: clean async delay
+const delay = ms => new Promise(r => setTimeout(r, ms));
 
-    return await html2canvas(document.getElementById('dashboard-content'), {
-      scale: 1.5, useCORS: true, backgroundColor: null, logging: false,
-      windowWidth: 1200, scrollY: 0
-    });
+// Helper: resolve a CSS variable to its actual computed value
+function resolveCSSVar(varName) {
+  return window.getComputedStyle(document.documentElement)
+    .getPropertyValue(varName).trim();
+}
+
+// Inject/remove temporary inline overrides so html2canvas picks up theme colors
+function applyExportStyles(enable) {
+  const id = '__export_style__';
+  if (!enable) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+    return;
   }
+  const bg      = resolveCSSVar('--bg');
+  const surface = resolveCSSVar('--surface');
+  const text    = resolveCSSVar('--text');
+  const textDim = resolveCSSVar('--text-dim');
+  const border  = resolveCSSVar('--border');
+  const surface2= resolveCSSVar('--surface2');
+  const h1color = resolveCSSVar('--h1-color');
+
+  // Build a style block that forces html2canvas to read actual colors
+  const css = `
+    /* export capture overrides */
+    #dashboard-content, #exec-summary,
+    #dashboard-content *, #exec-summary * {
+      color: inherit !important;
+    }
+    #dashboard-content { background: ${bg} !important; }
+    #exec-summary      { background: ${bg} !important; }
+    .summary-card, .chart-card, .kpi-table-wrap,
+    .speedo-card, .nko-hero-card, .insight-card,
+    .rank-table, .unit-detail-table {
+      background: ${surface} !important;
+      border-color: ${border} !important;
+    }
+    .card-value, .nko-hero-val, .insight-card-val,
+    .card-label, .gauge-name, .gauge-sub,
+    .speedo-title, .gauge-canvas-wrap {
+      color: ${text} !important;
+    }
+    .card-sub, .text-dim, .gauge-name,
+    .speedo-row-label, .speedo-row-val,
+    .rank-table td, .unit-detail-table td,
+    .perbaikan-name, .perbaikan-vals,
+    .perhatian-item-name {
+      color: ${textDim} !important;
+    }
+    thead th, .rank-table th, .unit-detail-table th {
+      background: ${surface2} !important;
+      color: ${textDim} !important;
+    }
+    tbody tr.group-row { background: ${surface2} !important; }
+    tbody tr.group-row td { color: ${text} !important; }
+    h1, .section-title, .exec-section-title,
+    .exec-header h1, .speedo-title {
+      color: ${h1color} !important;
+    }
+    .nko-hero-unit, .sb-section { color: ${textDim} !important; }
+    .summary-grid, .charts-grid,
+    .speedometers-grid, .nko-hero-grid { background: transparent !important; }
+    /* progress bar bg */
+    .pb-bar-wrap, .perhatian-item-bar, .rank-bar-bg { background: ${border} !important; }
+  `;
+
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = css;
+  document.head.appendChild(style);
+}
+
+async function renderUnitToCanvas(unitKey) {
+  const RENDER_W = 1080;
+  const bg = resolveCSSVar('--bg') || '#0a0f1e';
+
+  // Apply export style overrides BEFORE capture
+  applyExportStyles(true);
+  await delay(80); // let browser repaint
+
+  let el, canvas;
+  try {
+    if (unitKey === 'summary') {
+      switchUnit('summary');
+      await delay(900);
+      el = document.getElementById('exec-summary');
+      canvas = await html2canvas(el, {
+        scale: 2, useCORS: true, logging: false,
+        backgroundColor: bg,
+        windowWidth: RENDER_W,
+        x: 0, y: 0,
+        scrollX: 0, scrollY: -window.scrollY,
+        ignoreElements: e => e.id === '__export_style__' ||
+          (e.classList && e.classList.contains('no-print'))
+      });
+    } else {
+      switchUnit(unitKey);
+      await delay(450);
+      setMonth(3);
+      await delay(700);
+      window.scrollTo(0, 0);
+      el = document.getElementById('dashboard-content');
+      canvas = await html2canvas(el, {
+        scale: 2, useCORS: true, logging: false,
+        backgroundColor: bg,
+        windowWidth: RENDER_W,
+        x: 0, y: 0,
+        scrollX: 0, scrollY: -window.scrollY,
+        ignoreElements: e => e.id === '__export_style__' ||
+          (e.classList && e.classList.contains('no-print'))
+      });
+    }
+  } finally {
+    // Always remove export overrides after capture
+    applyExportStyles(false);
+  }
+  return canvas;
 }
 
 async function startExport() {
@@ -2895,95 +2997,98 @@ async function startExport() {
   const originalUnit = activeUnit;
   const { jsPDF } = window.jspdf;
 
-  // A4 landscape: 297 x 210 mm, portrait: 210 x 297 mm
-  // Use landscape for wider dashboard
-  const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-  const pgW = pdf.internal.pageSize.getWidth();
-  const pgH = pdf.internal.pageSize.getHeight();
+  const unitNames = {
+    summary: 'Executive Summary', up3: 'UP3 Masohi', masohi: 'ULP Masohi',
+    kairatu: 'ULP Kairatu', piru: 'ULP Piru', kobisonta: 'ULP Kobisonta', bula: 'ULP Bula'
+  };
 
-  // Close modal temporarily while capturing
+  // Hide sidebar & toggle during capture
   document.getElementById('export-modal-backdrop').classList.remove('open');
-  // Hide toggle button and sidebar during capture
   document.getElementById('sb-toggle-btn').style.visibility = 'hidden';
-  document.querySelector('.sidebar').style.visibility = 'hidden';
+  document.querySelector('.sidebar').style.visibility    = 'hidden';
   document.getElementById('app-layout').classList.add('sb-collapsed');
+  await delay(200);
+
+  // PDF in mm @96dpi: 1px = 0.264583mm
+  // We render at scale:2, so effective px = canvas px / 2
+  // Portrait width = 210mm (A4), but we use flexible height
+  const PDF_W_MM  = 210;      // portrait A4 width
+  const MM_PER_PX = 0.264583; // mm per CSS pixel
+  const SCALE     = 2;        // html2canvas scale
+  const RENDER_W  = 1080;     // CSS px render width
+  // 1 CSS px at render → SCALE raw px in canvas
+  // canvas px → mm:  mm = canvas_px / SCALE * MM_PER_PX
+  // PDF image width in mm = RENDER_W * MM_PER_PX = PDF_W_MM (approx)
+  // Actual ratio: mm/canvas_px = MM_PER_PX / SCALE
+  const MARGIN_MM = 0; // full bleed, no margin
+
+  let pdf = null;
+  let firstPage = true;
 
   try {
     for (let i = 0; i < selected.length; i++) {
       const key = selected[i];
-      const unitNames = {
-        summary: 'Executive Summary', up3: 'UP3 Masohi', masohi: 'ULP Masohi',
-        kairatu: 'ULP Kairatu', piru: 'ULP Piru', kobisonta: 'ULP Kobisonta', bula: 'ULP Bula'
-      };
-      const pct = Math.round(((i) / selected.length) * 100);
-      setProgress(pct, `Merender ${unitNames[key]} (${i+1}/${selected.length})...`);
-      document.getElementById('export-modal-backdrop').classList.remove('open');
+      setProgress(
+        Math.round((i / selected.length) * 90),
+        `Merender ${unitNames[key]}… (${i + 1}/${selected.length})`
+      );
 
-      const canvas = await renderUnitToCanvas(key);
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      // Render to canvas
+      const canvas  = await renderUnitToCanvas(key);
+      const cW      = canvas.width;   // raw px (RENDER_W * SCALE)
+      const cH      = canvas.height;  // raw px (full content height * SCALE)
 
-      // Scale canvas to fit PDF page
-      const canvasW = canvas.width;
-      const canvasH = canvas.height;
-      const ratio = pgW / canvasW;
-      const imgH = canvasH * ratio;
+      // mm dimensions for this page
+      const pgW_mm  = PDF_W_MM;
+      const pgH_mm  = (cH / cW) * pgW_mm; // proportional height — flexible!
 
-      if (i > 0) pdf.addPage();
-
-      // If content taller than page, split into multiple pages
-      if (imgH <= pgH) {
-        pdf.addImage(imgData, 'JPEG', 0, 0, pgW, imgH);
+      if (firstPage) {
+        // Create PDF with custom first page size
+        pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: [pgW_mm, pgH_mm]
+        });
+        firstPage = false;
       } else {
-        // Multi-page: slice canvas
-        let yOffset = 0;
-        const sliceH = Math.floor(pgH / ratio);
-        let pageNum = 0;
-        while (yOffset < canvasH) {
-          const sliceCanvas = document.createElement('canvas');
-          sliceCanvas.width = canvasW;
-          sliceCanvas.height = Math.min(sliceH, canvasH - yOffset);
-          const sliceCtx = sliceCanvas.getContext('2d');
-          sliceCtx.drawImage(canvas, 0, -yOffset);
-          const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.92);
-          if (pageNum > 0) pdf.addPage();
-          pdf.addImage(sliceData, 'JPEG', 0, 0, pgW, sliceCanvas.height * ratio);
-          yOffset += sliceH;
-          pageNum++;
-        }
+        // Add new page with this unit's custom size
+        pdf.addPage([pgW_mm, pgH_mm], 'portrait');
       }
 
-      // Add header label on each page
-      pdf.setFontSize(8);
-      pdf.setTextColor(150, 150, 150);
-      pdf.text(`PT PLN (Persero) UIW Maluku & Maluku Utara — ${unitNames[key]} — s.d. April 2026`, 6, pgH - 4);
-      pdf.text(`Halaman ${pdf.getNumberOfPages()}`, pgW - 20, pgH - 4);
+      // Draw full canvas as single image on the page
+      const imgData = canvas.toDataURL('image/jpeg', 0.93);
+      pdf.addImage(imgData, 'JPEG', 0, 0, pgW_mm, pgH_mm, '', 'FAST');
+
+      // Thin footer strip
+      pdf.setFontSize(6.5);
+      pdf.setTextColor(180, 180, 180);
+      const footerY = pgH_mm - 2.5;
+      pdf.text(
+        `PT PLN (Persero) UIW Maluku & Maluku Utara  ·  ${unitNames[key]}  ·  s.d. April 2026`,
+        pgW_mm / 2, footerY, { align: 'center' }
+      );
     }
 
-    setProgress(100, 'Menyimpan file PDF...');
-    await new Promise(r => setTimeout(r, 300));
+    setProgress(95, 'Menyimpan file PDF…');
+    await delay(200);
 
-    const timestamp = new Date().toISOString().slice(0,10);
-    pdf.save(`Kinerja_UP3_ULP_Masohi_${timestamp}.pdf`);
+    const ts = new Date().toISOString().slice(0, 10);
+    pdf.save(`Kinerja_PLN_Masohi_${ts}.pdf`);
+    setProgress(100, `✅ Selesai! ${selected.length} halaman tersimpan ke Downloads.`);
 
   } catch (err) {
     console.error('Export error:', err);
-    alert('Terjadi kesalahan saat export: ' + err.message);
+    alert('Gagal export: ' + err.message);
   } finally {
-    // Restore sidebar & toggle
+    // Restore UI
     document.getElementById('sb-toggle-btn').style.visibility = '';
-    document.querySelector('.sidebar').style.visibility = '';
+    document.querySelector('.sidebar').style.visibility    = '';
     document.getElementById('app-layout').classList.remove('sb-collapsed');
-
-    // Restore original unit
     switchUnit(originalUnit);
-
-    // Reopen modal
-    setTimeout(() => {
-      document.getElementById('export-modal-backdrop').classList.add('open');
-      btn.disabled = false;
-      btn.textContent = '⬇ Export PDF';
-      setProgress(100, '✅ Export selesai! File tersimpan di folder Downloads.');
-    }, 400);
+    await delay(400);
+    document.getElementById('export-modal-backdrop').classList.add('open');
+    btn.disabled    = false;
+    btn.textContent = '⬇ Export PDF';
   }
 }
 
@@ -2998,7 +3103,7 @@ async function startExport() {
       <h3>📄 Export PDF</h3>
       <button onclick="closeExportModal()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:20px;line-height:1;padding:4px">×</button>
     </div>
-    <p>Pilih unit yang ingin diekspor, lalu pilih metode export.</p>
+    <p>Pilih unit yang ingin diekspor. Setiap unit menjadi <b>1 halaman potrait</b> dengan ukuran kertas menyesuaikan isi konten secara otomatis.</p>
 
     <!-- UNIT CHECKLIST -->
     <div class="export-unit-list" id="export-unit-list">
@@ -3056,7 +3161,7 @@ async function startExport() {
       <div class="export-method-card" id="method-html2canvas" onclick="selectMethod('html2canvas')">
         <div class="em-icon">🖼️</div>
         <div class="em-title">Screenshot PDF</div>
-        <div class="em-desc">Render grafik & chart menjadi gambar, lalu export ke PDF. Hasil presisi, cocok untuk laporan.</div>
+        <div class="em-desc">Render grafik & chart menjadi gambar presisi. Potrait, 1 halaman per unit, ukuran kertas fleksibel menyesuaikan isi.</div>
         <div class="em-badge">Direkomendasikan</div>
       </div>
       <!-- Browser Print -->
