@@ -2934,49 +2934,119 @@ function applyExportStyles(enable) {
 }
 
 async function renderUnitToCanvas(unitKey) {
-  const RENDER_W = 1080;
-  const bg = resolveCSSVar('--bg') || '#0a0f1e';
+  // ── Strategy: force a fixed desktop-width layout for rendering ──────
+  // On mobile, the live layout is narrow → charts tiny → blurry PDF.
+  // We temporarily override the viewport-sensitive CSS so the dashboard
+  // renders at a fixed 1280px wide regardless of screen size.
 
-  // Apply export style overrides BEFORE capture
-  applyExportStyles(true);
-  await delay(80); // let browser repaint
+  const CAPTURE_W = 1280;   // logical CSS px width we simulate
+  const SCALE     = 2;      // html2canvas scale factor (for sharpness)
+  const bg        = resolveCSSVar('--bg') || '#0a0f1e';
 
-  let el, canvas;
-  try {
-    if (unitKey === 'summary') {
-      switchUnit('summary');
-      await delay(900);
-      el = document.getElementById('exec-summary');
-      canvas = await html2canvas(el, {
-        scale: 2, useCORS: true, logging: false,
-        backgroundColor: bg,
-        windowWidth: RENDER_W,
-        x: 0, y: 0,
-        scrollX: 0, scrollY: -window.scrollY,
-        ignoreElements: e => e.id === '__export_style__' ||
-          (e.classList && e.classList.contains('no-print'))
-      });
-    } else {
-      switchUnit(unitKey);
-      await delay(450);
-      setMonth(3);
-      await delay(700);
-      window.scrollTo(0, 0);
-      el = document.getElementById('dashboard-content');
-      canvas = await html2canvas(el, {
-        scale: 2, useCORS: true, logging: false,
-        backgroundColor: bg,
-        windowWidth: RENDER_W,
-        x: 0, y: 0,
-        scrollX: 0, scrollY: -window.scrollY,
-        ignoreElements: e => e.id === '__export_style__' ||
-          (e.classList && e.classList.contains('no-print'))
-      });
+  // 1. Collapse sidebar & hide chrome so it doesn't appear in export
+  document.getElementById('app-layout').classList.add('sb-collapsed');
+  document.getElementById('sb-toggle-btn').style.display = 'none';
+  document.querySelector('.sidebar').style.display       = 'none';
+  await delay(80);
+
+  // 2. Temporarily lock layout to desktop width
+  //    We inject a style that overrides responsive breakpoints
+  const lockId  = '__layout_lock__';
+  const lockCss = `
+    #${lockId}_ref { display:none }
+    .main-content {
+      margin-left: 0 !important;
+      width: ${CAPTURE_W}px !important;
+      min-width: ${CAPTURE_W}px !important;
     }
-  } finally {
-    // Always remove export overrides after capture
-    applyExportStyles(false);
+    /* Force desktop grid layouts */
+    .charts-grid     { grid-template-columns: repeat(2, 1fr) !important; }
+    .speedometers-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .summary-grid    { grid-template-columns: repeat(4, 1fr) !important; }
+    .nko-hero-grid   { grid-template-columns: repeat(6, 1fr) !important; }
+    .insight-grid    { grid-template-columns: repeat(3, 1fr) !important; }
+    header           { flex-direction: row !important; }
+    .header-right    { align-items: flex-end !important; }
+    /* Make chart canvases re-render at fixed size */
+    .chart-wrap      { height: 280px !important; }
+    .chart-card-sm .chart-wrap { height: 200px !important; }
+  `;
+  let lockStyle = document.getElementById(lockId);
+  if (!lockStyle) {
+    lockStyle = document.createElement('style');
+    lockStyle.id = lockId;
+    document.head.appendChild(lockStyle);
   }
+  lockStyle.textContent = lockCss;
+  await delay(60);
+
+  // 3. Apply theme colour overrides
+  applyExportStyles(true);
+  await delay(60);
+
+  // 4. Switch unit, set month, wait for charts to render
+  let el;
+  if (unitKey === 'summary') {
+    switchUnit('summary');
+    await delay(1000);
+    el = document.getElementById('exec-summary');
+  } else {
+    switchUnit(unitKey);
+    await delay(500);
+    setMonth(3);
+    await delay(800);
+    el = document.getElementById('dashboard-content');
+  }
+
+  // 5. Force all Chart.js charts to resize to their containers
+  Object.values(charts).forEach(c => {
+    try { c.resize(); } catch(_) {}
+  });
+  await delay(400); // let charts finish rendering
+
+  // 6. Scroll to top so scrollY offset is clean
+  window.scrollTo(0, 0);
+  await delay(60);
+
+  // 7. Capture
+  let canvas;
+  try {
+    canvas = await html2canvas(el, {
+      scale          : SCALE,
+      useCORS        : true,
+      logging        : false,
+      backgroundColor: bg,
+      windowWidth    : CAPTURE_W,
+      windowHeight   : el.scrollHeight,
+      x              : 0,
+      y              : 0,
+      scrollX        : 0,
+      scrollY        : 0,
+      onclone        : (doc) => {
+        // In the cloned document, make all canvas elements copy pixel data
+        doc.querySelectorAll('canvas').forEach(c => {
+          try {
+            const orig = document.getElementById(c.id);
+            if (orig) {
+              const ctx2 = c.getContext('2d');
+              ctx2.drawImage(orig, 0, 0);
+            }
+          } catch(_) {}
+        });
+      },
+      ignoreElements : e =>
+        e.id === '__export_style__' ||
+        e.id === lockId ||
+        (e.classList && e.classList.contains('no-print'))
+    });
+  } finally {
+    // 8. Restore everything
+    applyExportStyles(false);
+    lockStyle.textContent = '';
+    document.getElementById('sb-toggle-btn').style.display = '';
+    document.querySelector('.sidebar').style.display       = '';
+  }
+
   return canvas;
 }
 
@@ -3002,12 +3072,9 @@ async function startExport() {
     kairatu: 'ULP Kairatu', piru: 'ULP Piru', kobisonta: 'ULP Kobisonta', bula: 'ULP Bula'
   };
 
-  // Hide sidebar & toggle during capture
+  // Hide modal during capture
   document.getElementById('export-modal-backdrop').classList.remove('open');
-  document.getElementById('sb-toggle-btn').style.visibility = 'hidden';
-  document.querySelector('.sidebar').style.visibility    = 'hidden';
-  document.getElementById('app-layout').classList.add('sb-collapsed');
-  await delay(200);
+  await delay(100);
 
   // PDF in mm @96dpi: 1px = 0.264583mm
   // We render at scale:2, so effective px = canvas px / 2
@@ -3040,10 +3107,11 @@ async function startExport() {
 
       // mm dimensions for this page
       const pgW_mm  = PDF_W_MM;
-      const pgH_mm  = (cH / cW) * pgW_mm; // proportional height — flexible!
+      const FOOTER_MM = 8;  // 8mm ruang footer di bawah gambar
+      const imgH_mm   = (cH / cW) * pgW_mm;   // tinggi gambar
+      const pgH_mm    = imgH_mm + FOOTER_MM;   // total tinggi halaman = gambar + footer
 
       if (firstPage) {
-        // Create PDF with custom first page size
         pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
@@ -3051,21 +3119,30 @@ async function startExport() {
         });
         firstPage = false;
       } else {
-        // Add new page with this unit's custom size
         pdf.addPage([pgW_mm, pgH_mm], 'portrait');
       }
 
-      // Draw full canvas as single image on the page
+      // Gambar mengisi area atas (tanpa menyentuh footer)
       const imgData = canvas.toDataURL('image/jpeg', 0.93);
-      pdf.addImage(imgData, 'JPEG', 0, 0, pgW_mm, pgH_mm, '', 'FAST');
+      pdf.addImage(imgData, 'JPEG', 0, 0, pgW_mm, imgH_mm, '', 'FAST');
 
-      // Thin footer strip
-      pdf.setFontSize(6.5);
-      pdf.setTextColor(180, 180, 180);
-      const footerY = pgH_mm - 2.5;
+      // Garis tipis pemisah footer
+      pdf.setDrawColor(200, 200, 200);
+      pdf.setLineWidth(0.2);
+      pdf.line(6, imgH_mm + 1.5, pgW_mm - 6, imgH_mm + 1.5);
+
+      // Footer text di area bawah yang kosong
+      pdf.setFontSize(7);
+      pdf.setTextColor(140, 140, 140);
       pdf.text(
         `PT PLN (Persero) UIW Maluku & Maluku Utara  ·  ${unitNames[key]}  ·  s.d. April 2026`,
-        pgW_mm / 2, footerY, { align: 'center' }
+        pgW_mm / 2, imgH_mm + 5.5, { align: 'center' }
+      );
+      // Nomor halaman di kanan
+      pdf.setFontSize(6.5);
+      pdf.text(
+        `Hal. ${pdf.getNumberOfPages()}`,
+        pgW_mm - 6, imgH_mm + 5.5, { align: 'right' }
       );
     }
 
@@ -3079,10 +3156,14 @@ async function startExport() {
   } catch (err) {
     console.error('Export error:', err);
     alert('Gagal export: ' + err.message);
+    // Ensure lock style is cleaned up on error
+    const ls = document.getElementById('__layout_lock__');
+    if (ls) ls.textContent = '';
+    applyExportStyles(false);
+    document.getElementById('sb-toggle-btn').style.display = '';
+    document.querySelector('.sidebar').style.display = '';
   } finally {
-    // Restore UI
-    document.getElementById('sb-toggle-btn').style.visibility = '';
-    document.querySelector('.sidebar').style.visibility    = '';
+    // Restore app state
     document.getElementById('app-layout').classList.remove('sb-collapsed');
     switchUnit(originalUnit);
     await delay(400);
