@@ -860,7 +860,7 @@
   <div class="sb-section">Unit Layanan Pelanggan</div>
   <button class="sb-item" onclick="switchUnit('masohi')" id="nav-masohi"><span class="sb-icon">📍</span><span class="sb-text">ULP Masohi</span><span class="sb-badge" id="badge-masohi">107.53</span></button>
   <button class="sb-item" onclick="switchUnit('kairatu')" id="nav-kairatu"><span class="sb-icon">📍</span><span class="sb-text">ULP Kairatu</span><span class="sb-badge" id="badge-kairatu">107.22</span></button>
-  <button class="sb-item" onclick="switchUnit('piru')" id="nav-piru"><span class="sb-icon">📍</span><span class="sb-text">ULP Piru</span><span class="sb-badge" id="badge-piru">105.84</span></button>
+  <button class="sb-item" onclick="switchUnit('piru')" id="nav-piru"><span class="sb-icon">📍</span><span class="sb-text">ULP Piru</span><span class="sb-badge" id="badge-piru">106.38</span></button>
   <button class="sb-item" onclick="switchUnit('kobisonta')" id="nav-kobisonta"><span class="sb-icon">📍</span><span class="sb-text">ULP Kobisonta</span><span class="sb-badge" id="badge-kobisonta">109.06</span></button>
   <button class="sb-item" onclick="switchUnit('bula')" id="nav-bula"><span class="sb-icon">📍</span><span class="sb-text">ULP Bula</span><span class="sb-badge" id="badge-bula">108.26</span></button>
   <div class="sb-footer">
@@ -1268,7 +1268,7 @@ const ulpData = {
   },
   piru: {
     label:"ULP Piru", subtitle:"Unit Layanan Pelanggan Piru",
-    nko:[81.75, 86.39, 97.26, 100.36, 101.79, 106.11, 105.84],
+    nko:[81.75, 86.39, 97.26, 100.36, 101.79, 106.11, 106.38],
     kpi:[
       {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
        target:[0.45, 0.78, 0.45, 0.81, 1.14, 1.52, 1.83],realisasi:[-0.02, 0.23, 0.67, 1.22, 1.71, 2.04, 2.52],pencapaian:[-4.44, 29.48, 110, 110, 110, 110, 110],nilai100:[0, 4.13, 15.4, 15.4, 15.4, 15.4, 15.4]},
@@ -1301,11 +1301,11 @@ const ulpData = {
       {no:"5e",name:"Peningkatan kWh Penjualan dari Pelanggan Lisdes",sat:"kWh",bob:0,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01],pencapaian:[100, 100, 100, 100, 100, 0, 100],nilai100:[0, 0, 0, 0, 0, 0, 0]},
       {no:"6",name:"Peningkatan Pelayanan Pelanggan",sat:"",bob:8,grp:true,
-       target:[null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null],nilai100:[8.17, 8.29, 8.4, 8.63, 8.76, 8.8, 8.46]},
+       target:[null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null],nilai100:[8.17, 8.29, 8.4, 8.63, 8.76, 8.8, 8.8]},
       {no:"6a",name:"Feedback Rating Negatif pada PLN Mobile - Gangguan",sat:"Kali",bob:2,grp:false,
        target:[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1],realisasi:[0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6b",name:"Response Time atas Gangguan (diluar Clear Tamper)",sat:"Menit",bob:2,grp:false,
-       target:[30, 30, 30, 30, 30, 30, 30],realisasi:[25.46, 24.74, 24.66, 24.59, 22.72, 23.52, 32.13],pencapaian:[110, 110, 110, 110, 110, 110, 92.9],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 1.86]},
+       target:[30, 30, 30, 30, 30, 30, 30],realisasi:[25.46, 24.74, 24.66, 24.59, 22.72, 23.52, 23.13],pencapaian:[110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10],realisasi:[21.59, 22.01, 19.83, 17.35, 15.65, 14.5, 15.74],pencapaian:[110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
@@ -1321,11 +1321,11 @@ const ulpData = {
       {no:"8b",name:"MTTR Siaga 1 TM (sesuai kewenangan)",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 110, 110, 110],pencapaian:[100, 100, 100, 100, 110, 110, 110],nilai100:[2, 2, 2, 2, 2.2, 2.2, 2.2]},
       {no:"9",name:"Management Cash In",sat:"",bob:6,grp:true,
-       target:[null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null],nilai100:[4.2, 4.2, 4.2, 6.4, 6.4, 6.4, 6.2]},
+       target:[null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null],nilai100:[4.2, 4.2, 4.2, 6.4, 6.4, 6.4, 6.4]},
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[5.1241, 10.2483, 15.3724, 20.4966, 25.6207, 30.7448, 88.093],realisasi:[0, 0, 0, 88.093, 88.093, 88.093, 88.093],pencapaian:[0, 0, 0, 110, 110, 110, 100],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2]},
+       target:[5.1241, 10.2483, 15.3724, 20.4966, 25.6207, 30.7448, 49.27],realisasi:[0, 0, 0, 88.093, 88.093, 88.093, 88.093],pencapaian:[0, 0, 0, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.22, 0.01],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.22, 0.01],pencapaian:[100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -3323,7 +3323,7 @@ async function startExport() {
       <div class="export-unit-row" onclick="toggleCheck('chk-piru')">
         <input type="checkbox" id="chk-piru" value="piru" checked>
         <label for="chk-piru">📍 ULP Piru</label>
-        <span class="eu-nko" style="color:#22c55e">105.84</span>
+        <span class="eu-nko" style="color:#22c55e">106.38</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-kobisonta')">
         <input type="checkbox" id="chk-kobisonta" value="kobisonta" checked>
