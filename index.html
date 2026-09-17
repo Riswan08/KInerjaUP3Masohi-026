@@ -859,10 +859,10 @@
   <button class="sb-item active" onclick="switchUnit('up3')" id="nav-up3"><span class="sb-icon">🏢</span><span class="sb-text">UP3 Masohi</span><span class="sb-badge" id="badge-up3">108.58</span></button>
   <div class="sb-section">Unit Layanan Pelanggan</div>
   <button class="sb-item" onclick="switchUnit('masohi')" id="nav-masohi"><span class="sb-icon">📍</span><span class="sb-text">ULP Masohi</span><span class="sb-badge" id="badge-masohi">107.56</span></button>
-  <button class="sb-item" onclick="switchUnit('kairatu')" id="nav-kairatu"><span class="sb-icon">📍</span><span class="sb-text">ULP Kairatu</span><span class="sb-badge" id="badge-kairatu">107.21</span></button>
+  <button class="sb-item" onclick="switchUnit('kairatu')" id="nav-kairatu"><span class="sb-icon">📍</span><span class="sb-text">ULP Kairatu</span><span class="sb-badge" id="badge-kairatu">106.71</span></button>
   <button class="sb-item" onclick="switchUnit('piru')" id="nav-piru"><span class="sb-icon">📍</span><span class="sb-text">ULP Piru</span><span class="sb-badge" id="badge-piru">106.14</span></button>
-  <button class="sb-item" onclick="switchUnit('kobisonta')" id="nav-kobisonta"><span class="sb-icon">📍</span><span class="sb-text">ULP Kobisonta</span><span class="sb-badge" id="badge-kobisonta">109.06</span></button>
-  <button class="sb-item" onclick="switchUnit('bula')" id="nav-bula"><span class="sb-icon">📍</span><span class="sb-text">ULP Bula</span><span class="sb-badge" id="badge-bula">108.39</span></button>
+  <button class="sb-item" onclick="switchUnit('kobisonta')" id="nav-kobisonta"><span class="sb-icon">📍</span><span class="sb-text">ULP Kobisonta</span><span class="sb-badge" id="badge-kobisonta">108.56</span></button>
+  <button class="sb-item" onclick="switchUnit('bula')" id="nav-bula"><span class="sb-icon">📍</span><span class="sb-text">ULP Bula</span><span class="sb-badge" id="badge-bula">108.10</span></button>
   <div class="sb-footer">
     <div class="sb-section" style="padding:0 0 6px">Export</div>
     <button class="export-sb-btn" onclick="openExportModal()">
@@ -1110,7 +1110,7 @@
 <script>
 
 const ulpData = {
-  up3: { label:'UP3 Masohi', subtitle:'Unit Pelaksana Pelayanan Pelanggan', nko:[98.67, 97.83, 101.08, 100.18, 101.87, 103.55, 108.93, 108.58], kpi:null },
+  up3: { label:'UP3 Masohi', subtitle:'Unit Pelaksana Pelayanan Pelanggan', nko:[98.67, 97.83, 101.08, 100.18, 101.87, 103.5473, 108.93, 108.58], kpi:null },
   masohi: {
     label:"ULP Masohi", subtitle:"Unit Layanan Pelanggan Masohi",
     nko:[85.03, 87.16, 102.93, 107.74, 108.22, 102.34, 107.53, 107.56],
@@ -1153,6 +1153,10 @@ const ulpData = {
        target:[30, 30, 30, 30, 30, 30, 30, 30],realisasi:[25.3, 24.82, 24.57, 24.55, 23.75, 23.79, 23.68, 23.65],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10, 10],realisasi:[28.45, 21.13, 19.74, 20.79, 22.72, 27.49, 13.33, 40.59],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+      {no:"6d",name:"Total Kali Transaksi Keuangan di PLN Mobile (seluruh Pelanggan PLN)",sat:"Ribuan Kali Transaksi",bob:1.2,grp:false,
+       target:[1392.4218, 2408.3245, 3424.2272, 4440.1299, 5456.0325, 8354.531, 9544.4473, 10734.3636],realisasi:[1039, 1678, 3706, 6581, 9959, 13154, 17290, 22552],pencapaian:[74.61, 69.67, 108.22, 110, 110, 110, 110, 110],nilai100:[0.9, 0.84, 1.3, 1.32, 1.32, 1.32, 1.32, 1.32]},
+      {no:"6e",name:"Total Rupiah Transaksi di PLN Mobile",sat:"Rp Miliar",bob:0.8,grp:false,
+       target:[0.2098, 0.4195, 0.839, 0.6293, 0.839, 1.0488, 1.2609, 1.473],realisasi:[0.0779, 0.195, 0.4598, 0.747, 1.132, 1.8904, 2.385, 2.799],pencapaian:[37.13, 46.47, 54.79, 110, 110, 110, 110, 110],nilai100:[0.3, 0.38, 0.44, 0.88, 0.88, 0.88, 0.88, 0.88]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[7.7, 7.7, 7.7, 7.7, 7.5, 7.5, 7.7, 7.7]},
       {no:"7a",name:"Gangguan TM (sesuai kewenangan)",sat:"kali",bob:5,grp:false,
@@ -1170,7 +1174,7 @@ const ulpData = {
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[6.2276, 12.4553, 18.6829, 24.9106, 31.1382, 37.3659, 59.8847, 64.39],realisasi:[0, 0, 0, 107.061, 107.061, 107.061, 107.061, 107.061],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:[6.2276, 12.4553, 18.6829, 24.9106, 31.1382, 37.3659, 59.8847, 64.3885],realisasi:[0, 0, 0, 107.061, 107.061, 107.061, 107.061, 107.061],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.04, 0.01, 100],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.04, 0.01, 100],pencapaian:[100, 100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 2, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -1180,18 +1184,26 @@ const ulpData = {
       {no:"10b",name:"Penyelesaian Ganti Meter",sat:"Unit",bob:2,grp:false,
        target:[395, 790, 1185, 1580, 1975, 2370, 2765, 3160],realisasi:[155, 492, 1070, 1509, 2154, 2738, 3179, 3575],pencapaian:[39.24, 62.27, 90.29, 95.5, 109.06, 110, 110, 110],nilai100:[0.79, 1.25, 1.81, 1.91, 2.19, 2.2, 2.2, 2.2]},
       {no:"10c",name:"Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",sat:"%",bob:2,grp:false,
-       target:[null, null, null, null, null, null, null, null],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"11",name:"Digitalisasi Aplikasi Korporat",sat:"",bob:4,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[4, 4, 4, 4, 4, 4, 4.16, 4.16]},
       {no:"11a",name:"Pengembangan Aset Distribusi",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
       {no:"11b",name:"Efektivitas Pemeliharaan",sat:"%",bob:2,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]}
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
+      {no:"12",name:"Kepatuhan, Maturity Level dan Tata Kelola Perusahaan",sat:"",bob:null,grp:true,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12a",name:"Implementasi Maturity Level",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12b",name:"Kepatuhan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12c",name:"Tata Kelola Perusahaan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]}
     ]
   },
   kairatu: {
     label:"ULP Kairatu", subtitle:"Unit Layanan Pelanggan Kairatu",
-    nko:[84.08, 88.86, 101.67, 106.28, 106.78, 97.22, 107.22, 107.21],
+    nko:[79.08, 83.86, 96.67, 101.28, 101.78, 91.72, 99.47, 106.71],
     kpi:[
       {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
        target:[0.35, 0.61, 0.25, 0.46, 0.63, 0.97, 1.06, 1.28],realisasi:[-0.01, 0.11, 0.38, 0.68, 0.95, 1.15, 1.38, 1.59],pencapaian:[-2.85, 18.03, 110, 110, 110, 110, 110, 110],nilai100:[0, 2.53, 15.4, 15.4, 15.4, 15.4, 15.4, 15.4]},
@@ -1206,11 +1218,11 @@ const ulpData = {
       {no:"3c",name:"ENS (sesuai kewenangan)",sat:"MWh",bob:2,grp:false,
        target:[1.23, 2.45, 3.68, 4.91, 6.13, 7.36, 8.58, 9.81],realisasi:[0.806, 1.789, 2.438, 3.589, 4.49, 5.52, 5.94, 6.94],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"4",name:"Penyelesaian Eksekusi RUPTL dan Investasi",sat:"",bob:10,grp:true,
-       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[10, 10, 10, 10, 10, 11, 10.5, 10.5]},
-      {no:"4a",name:"Penambahan Aset RUPTL",sat:"%",bob:10,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 110, 110, 110],pencapaian:[100, 100, 100, 100, 100, 110, 110, 110],nilai100:[10, 10, 10, 10, 10, 11, 11, 5.5]},
-      {no:"4b",name:"Penambahan Aset Penyelesaian Fisik Investasi",sat:"%",bob:null,grp:false,
-       target:[null, null, null, null, null, null, null, 100],realisasi:[null, null, null, null, null, null, null, 100],pencapaian:[null, null, null, null, null, null, null, 100],nilai100:[null, null, null, null, null, null, 10, 5]},
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[5, 5, 5, 5, 5, 5.5, 2.75, 10]},
+      {no:"4a",name:"Penambahan Aset RUPTL",sat:"%",bob:5,grp:false,
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 110, 110, 100],pencapaian:[100, 100, 100, 100, 100, 110, 110, 100],nilai100:[5, 5, 5, 5, 5, 5.5, 5.5, 5]},
+      {no:"4b",name:"Penambahan Aset Penyelesaian Fisik Investasi",sat:"%",bob:5,grp:false,
+       target:[null, null, null, null, null, null, null, 100],realisasi:[null, null, null, null, null, null, null, 100],pencapaian:[null, null, null, null, null, null, null, 100],nilai100:[0, 0, 0, 0, 0, 0, 0, 5]},
       {no:"5",name:"Percepatan Penyambungan Pelanggan",sat:"",bob:10,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[6.97, 6.52, 6.98, 8.84, 8.36, 0, 9.92, 9.94]},
       {no:"5a",name:"Jumlah Penambahan Pelanggan",sat:"Pelanggan",bob:2.5,grp:false,
@@ -1231,6 +1243,10 @@ const ulpData = {
        target:[30, 30, 30, 30, 30, 30, 30, 30],realisasi:[25.43, 24.51, 24.45, 24.44, 22.82, 23.44, 23.17, 23.08],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10, 10],realisasi:[7.73, 6.36, 6.61, 7.42, 7.15, 10.21, 13.33, 13.88],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+      {no:"6d",name:"Total Kali Transaksi Keuangan di PLN Mobile (seluruh Pelanggan PLN)",sat:"Ribuan Kali Transaksi",bob:1.2,grp:false,
+       target:[1002.645, 2018.5476, 3034.4503, 4050.353, 5066.2557, 6015.8698, 7205.7861, 8395.7024],realisasi:[1641, 2960, 4656, 6585, 8406, 10362, 12736, 15510],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32]},
+      {no:"6e",name:"Total Rupiah Transaksi di PLN Mobile",sat:"Rp Miliar",bob:0.8,grp:false,
+       target:[0.1224, 0.2447, 0.4894, 0.5244, 0.6992, 0.874, 1.0508, 1.2275],realisasi:[0.0275, 0.2171, 0.4075, 0.661, 0.814, 1.0659, 1.451, 1.685],pencapaian:[22.44, 88.69, 83.26, 110, 110, 110, 110, 110],nilai100:[0.18, 0.71, 0.67, 0.88, 0.88, 0.88, 0.88, 0.88]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7]},
       {no:"7a",name:"Gangguan TM (sesuai kewenangan)",sat:"kali",bob:5,grp:false,
@@ -1248,7 +1264,7 @@ const ulpData = {
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[4.0453, 8.0906, 12.1359, 16.1812, 20.2265, 24.2718, 38.8994, 41.82],realisasi:[0, 0, 0, 69.547, 69.547, 69.547, 69.547, 69.547],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:[4.0453, 8.0906, 12.1359, 16.1812, 20.2265, 24.2718, 38.8994, 41.825],realisasi:[0, 0, 0, 69.547, 69.547, 69.547, 69.547, 69.547],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.15, 100, 100],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.15, 100, 100],pencapaian:[100, 100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 2, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -1258,13 +1274,21 @@ const ulpData = {
       {no:"10b",name:"Penyelesaian Ganti Meter",sat:"Unit",bob:2,grp:false,
        target:[170, 340, 510, 680, 850, 1020, 1.19, 1360],realisasi:[127, 442, 765, 1132, 1667, 2096, 2231, 2491],pencapaian:[74.7, 110, 110, 110, 110, 110, 110, 110],nilai100:[1.5, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"10c",name:"Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",sat:"%",bob:2,grp:false,
-       target:[null, null, null, null, null, null, null, null],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"11",name:"Digitalisasi Aplikasi Korporat",sat:"",bob:4,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[4, 4, 4, 4, 4, 4, 4.16, 4.16]},
       {no:"11a",name:"Pengembangan Aset Distribusi",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
       {no:"11b",name:"Efektivitas Pemeliharaan",sat:"%",bob:2,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]}
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
+      {no:"12",name:"Kepatuhan, Maturity Level dan Tata Kelola Perusahaan",sat:"",bob:null,grp:true,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12a",name:"Implementasi Maturity Level",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12b",name:"Kepatuhan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12c",name:"Tata Kelola Perusahaan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]}
     ]
   },
   piru: {
@@ -1309,6 +1333,10 @@ const ulpData = {
        target:[30, 30, 30, 30, 30, 30, 30, 30],realisasi:[25.46, 24.74, 24.66, 24.59, 22.72, 23.52, 23.13, 23.11],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10, 10],realisasi:[21.59, 22.01, 19.83, 17.35, 15.65, 14.5, 15.74, 15.5],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+      {no:"6d",name:"Total Kali Transaksi Keuangan di PLN Mobile (seluruh Pelanggan PLN)",sat:"Ribuan Kali Transaksi",bob:1.2,grp:false,
+       target:[1043.9849, 2059.8876, 3075.7903, 4091.693, 5107.5956, 6263.9096, 7453.8259, 8643.7422],realisasi:[888, 1385, 2338, 3894, 5440, 7180, 9800, 13575],pencapaian:[85.05, 67.23, 76.01, 95.16, 106.5, 110, 110, 110],nilai100:[1.03, 0.81, 0.92, 1.15, 1.28, 1.32, 1.32, 1.32]},
+      {no:"6e",name:"Total Rupiah Transaksi di PLN Mobile",sat:"Rp Miliar",bob:0.8,grp:false,
+       target:[0.1398, 0.2797, 0.5594, 0.839, 1.1187, 1.3984, 1.6812, 1.964],realisasi:[0.0939, 0.3761, 0.6147, 0.945, 1.272, 1.6124, 1.981, 2.385],pencapaian:[67.11, 110, 109.88, 110, 110, 110, 110, 110],nilai100:[0.54, 0.88, 0.88, 0.88, 0.88, 0.88, 0.88, 0.88]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7]},
       {no:"7a",name:"Gangguan TM (sesuai kewenangan)",sat:"kali",bob:5,grp:false,
@@ -1326,7 +1354,7 @@ const ulpData = {
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[5.1241, 10.2483, 15.3724, 20.4966, 25.6207, 30.7448, 49.27, 52.98],realisasi:[0, 0, 0, 88.093, 88.093, 88.093, 88.093, 88.093],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:[5.1241, 10.2483, 15.3724, 20.4966, 25.6207, 30.7448, 49.27, 52.9792],realisasi:[0, 0, 0, 88.093, 88.093, 88.093, 88.093, 88.093],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.22, 0.01, 100],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.22, 0.01, 100],pencapaian:[100, 100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 2, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -1336,18 +1364,26 @@ const ulpData = {
       {no:"10b",name:"Penyelesaian Ganti Meter",sat:"Unit",bob:2,grp:false,
        target:[269, 538, 807, 1076, 1345, 1614, 1883, 2152],realisasi:[48, 150, 519, 849, 1281, 1650, 1938, 2186],pencapaian:[17.84, 27.88, 64.31, 78.9, 95.24, 102.23, 102.92, 101.57],nilai100:[0.36, 0.56, 1.29, 1.58, 1.91, 2.05, 2.06, 2.04]},
       {no:"10c",name:"Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",sat:"%",bob:2,grp:false,
-       target:[null, null, null, null, null, null, null, null],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"11",name:"Digitalisasi Aplikasi Korporat",sat:"",bob:4,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[4, 4, 4, 4, 4, 4, 4.16, 4.16]},
       {no:"11a",name:"Pengembangan Aset Distribusi",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
       {no:"11b",name:"Efektivitas Pemeliharaan",sat:"%",bob:2,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]}
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
+      {no:"12",name:"Kepatuhan, Maturity Level dan Tata Kelola Perusahaan",sat:"",bob:null,grp:true,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12a",name:"Implementasi Maturity Level",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12b",name:"Kepatuhan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12c",name:"Tata Kelola Perusahaan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]}
     ]
   },
   kobisonta: {
     label:"ULP Kobisonta", subtitle:"Unit Layanan Pelanggan Kobisonta",
-    nko:[98.04, 87.81, 106.43, 108.56, 109.43, 103.74, 109.06, 109.06],
+    nko:[98.04, 87.81, 106.43, 108.56, 109.43, 103.74, 109.06, 108.56],
     kpi:[
       {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
        target:[0.96, 1.67, 7.25, 7.94, 9.1, 9.73, 9.82, 9.87],realisasi:[4.43, 7.44, 13.07, 17.99, 21.84, 24.81, 26.72, 28.33],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[15.4, 15.4, 15.4, 15.4, 15.4, 15.4, 15.4, 15.4]},
@@ -1362,9 +1398,9 @@ const ulpData = {
       {no:"3c",name:"ENS (sesuai kewenangan)",sat:"MWh",bob:2,grp:false,
        target:[1.97, 3.92, 5.88, 7.84, 9.81, 11.77, 13.73, 15.69],realisasi:[0.46, 1.33, 3.75, 6.28, 7.19, 8.34, 10.01, 12.26],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"4",name:"Penyelesaian Eksekusi RUPTL dan Investasi",sat:"",bob:10,grp:true,
-       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[5, 5, 5, 5, 5, 5.34, 10.5, 10.5]},
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[5, 5, 5, 5, 5, 5.34, 10.5, 10]},
       {no:"4a",name:"Penambahan Aset RUPTL",sat:"%",bob:5,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 106.7, 110, 110],pencapaian:[100, 100, 100, 100, 100, 106.7, 110, 110],nilai100:[5, 5, 5, 5, 5, 5.34, 5.5, 5.5]},
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 106.7, 110, 100],pencapaian:[100, 100, 100, 100, 100, 106.7, 110, 100],nilai100:[5, 5, 5, 5, 5, 5.34, 5.5, 5]},
       {no:"4b",name:"Penambahan Aset Penyelesaian Fisik Investasi",sat:"%",bob:5,grp:false,
        target:[null, null, null, null, null, null, 100, 100],realisasi:[100, 100, 100, 100, 100, 106.7, 100, 100],pencapaian:[null, null, null, null, null, null, 100, 100],nilai100:[null, null, null, null, null, null, 5, 5]},
       {no:"5",name:"Percepatan Penyambungan Pelanggan",sat:"",bob:10,grp:true,
@@ -1387,10 +1423,14 @@ const ulpData = {
        target:[30, 30, 30, 30, 30, 30, 30, 30],realisasi:[25.36, 25.61, 24.46, 24.7, 23.54, 23.59, 23.68, 23.44],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10, 10],realisasi:[8.45, 8.36, 7.9, 6.86, 7.14, 7.89, 35.1, 11.72],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+      {no:"6d",name:"Total Kali Transaksi Keuangan di PLN Mobile (seluruh Pelanggan PLN)",sat:"Ribuan Kali Transaksi",bob:1.2,grp:false,
+       target:[1373.3789, 2389.2816, 3405.1843, 4421.087, 5436.9896, 8240.2736, 9430.1899, 10620.1062],realisasi:[2290, 4348, 6844, 10049, 12982, 15828, 19243, 23318],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32]},
+      {no:"6e",name:"Total Rupiah Transaksi di PLN Mobile",sat:"Rp Miliar",bob:0.8,grp:false,
+       target:[1.1362, 2.2724, 4.5448, 7.866, 10.488, 13.11, 15.7613, 18.4125],realisasi:[0.0742, 0.2616, 4.4624, 10.612, 16.848, 23.9916, 29.216, 35.172],pencapaian:[6.53, 11.51, 98.18, 110, 110, 110, 110, 110],nilai100:[0.06, 0.1, 0.79, 0.88, 0.88, 0.88, 0.88, 0.88]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[7.7, 7.7, 7.7, 7.7, 7.7, 7.5, 7.7, 7.7]},
       {no:"7a",name:"Gangguan TM (sesuai kewenangan)",sat:"kali",bob:5,grp:false,
-       target:[17, 32, 49, 73, 92, 110, 128, 128],realisasi:[4, 5, 8, 10, 13, 22, 39, 55],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5]},
+       target:[17, 32, 49, 64, 81, 96, 113, 128],realisasi:[4, 5, 8, 10, 13, 22, 39, 55],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5]},
       {no:"7b",name:"Kerusakan Peralatan Distribusi (sesuai kewenangan)",sat:"Unit",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 4, 4],realisasi:[0, 0, 0, 0, 0, 2, 2, 2],pencapaian:[110, 110, 110, 110, 110, 100, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2, 2.2, 2.2]},
       {no:"8",name:"Emergency Response Time (ERT) Distribusi",sat:"",bob:8,grp:true,
@@ -1404,7 +1444,7 @@ const ulpData = {
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[1.4709, 2.9418, 4.4127, 5.8836, 7.3545, 8.8254, 14.1441, 15.21],realisasi:[0, 0, 0, 25.29, 25.29, 25.29, 25.29, 25.29],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:[1.4709, 2.9418, 4.4127, 5.8836, 7.3545, 8.8254, 14.1441, 15.2078],realisasi:[0, 0, 0, 25.29, 25.29, 25.29, 25.29, 25.29],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 100, 100],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 100, 100],pencapaian:[100, 100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 1.1, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -1414,18 +1454,26 @@ const ulpData = {
       {no:"10b",name:"Penyelesaian Ganti Meter",sat:"Unit",bob:2,grp:false,
        target:[105, 210, 315, 420, 525, 630, 735, 840],realisasi:[391, 460, 630, 1050, 1396, 1496, 1686, 1809],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"10c",name:"Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",sat:"%",bob:2,grp:false,
-       target:[null, null, null, null, null, null, null, null],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"11",name:"Digitalisasi Aplikasi Korporat",sat:"",bob:4,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[4, 4, 4, 4, 4, 4, 4.16, 4.16]},
       {no:"11a",name:"Pengembangan Aset Distribusi",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
       {no:"11b",name:"Efektivitas Pemeliharaan",sat:"%",bob:2,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]}
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
+      {no:"12",name:"Kepatuhan, Maturity Level dan Tata Kelola Perusahaan",sat:"",bob:null,grp:true,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12a",name:"Implementasi Maturity Level",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12b",name:"Kepatuhan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12c",name:"Tata Kelola Perusahaan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]}
     ]
   },
   bula: {
     label:"ULP Bula", subtitle:"Unit Layanan Pelanggan Bula",
-    nko:[77.02, 77.75, 93.85, 96.19, 97.24, 108.12, 108.26, 108.39],
+    nko:[76.65, 77.39, 93.46, 95.83, 96.89, 107.81, 107.98, 108.1],
     kpi:[
       {no:"1",name:"Penjualan Tenaga Listrik",sat:"GWh",bob:14,grp:false,
        target:[0.43, 0.75, 0.02, 0.28, 0.52, 0.83, 1, 1.08],realisasi:[-0.25, -0.19, 0.03, 0.42, 0.77, 1.07, 1.25, 1.45],pencapaian:[-58.13, -25.33, 110, 110, 110, 110, 110, 110],nilai100:[0, 0, 15.4, 15.4, 15.4, 15.4, 15.4, 15.4]},
@@ -1446,11 +1494,11 @@ const ulpData = {
       {no:"4b",name:"Penambahan Aset Penyelesaian Fisik Investasi",sat:"%",bob:5,grp:false,
        target:[null, null, null, null, null, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[null, null, null, null, null, 100, 100, 100],nilai100:[null, null, null, null, null, 5, 5, 5]},
       {no:"5",name:"Percepatan Penyambungan Pelanggan",sat:"",bob:10,grp:true,
-       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[10.27, 10.28, 10.21, 10, 10, 10.38, 10.43, 10.43]},
-      {no:"5a",name:"Jumlah Penambahan Pelanggan",sat:"Pelanggan",bob:1,grp:false,
-       target:[55, 143, 231, 266, 336, 414, 461, 517],realisasi:[107, 316, 395, 427, 500, 599, 701, 764],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1]},
-      {no:"5b",name:"Penambahan Daya Tersambung",sat:"MVA",bob:1,grp:false,
-       target:[0.58, 1.2, 1.81, 1.66, 1.85, 1.91, 1.99, 2.18],realisasi:[0.21, 0.45, 0.57, 0.64, 0.75, 0.91, 1.05, 1.14],pencapaian:[36.2, 37.5, 31.49, 38.55, 40.54, 47.64, 52.76, 52.29],nilai100:[0.37, 0.38, 0.32, 0.39, 0.41, 0.48, 0.53, 0.53]},
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[9.9, 9.92, 9.82, 9.64, 9.65, 10.07, 10.15, 10.14]},
+      {no:"5a",name:"Jumlah Penambahan Pelanggan",sat:"Pelanggan",bob:0.5,grp:false,
+       target:[55, 143, 231, 266, 336, 414, 461, 517],realisasi:[107, 316, 395, 427, 500, 599, 701, 764],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[0.55, 0.55, 0.55, 0.55, 0.55, 0.55, 0.55, 0.55]},
+      {no:"5b",name:"Penambahan Daya Tersambung",sat:"MVA",bob:1.5,grp:false,
+       target:[0.58, 1.2, 1.81, 1.66, 1.85, 1.91, 1.99, 2.18],realisasi:[0.21, 0.45, 0.57, 0.64, 0.75, 0.91, 1.05, 1.14],pencapaian:[36.2, 37.5, 31.49, 38.55, 40.54, 47.64, 52.76, 52.29],nilai100:[0.55, 0.57, 0.48, 0.58, 0.61, 0.72, 0.8, 0.79]},
       {no:"5c",name:"Pendapatan Biaya Penyambungan",sat:"Rp Miliar",bob:2,grp:false,
        target:[0.11, 0.21, 0.32, 0.43, 0.53, 0.61, 0.69, 0.76],realisasi:[0.14, 0.26, 0.35, 0.41, 0.5, 0.99, 1.14, 1.21],pencapaian:[110, 110, 109.37, 95.34, 94.33, 110, 110, 110],nilai100:[2.2, 2.2, 2.19, 1.91, 1.89, 2.2, 2.2, 2.2]},
       {no:"5d",name:"Penambahan Jumlah Pelanggan Lisdes",sat:"Pelanggan",bob:4,grp:false,
@@ -1465,6 +1513,10 @@ const ulpData = {
        target:[30, 30, 30, 30, 30, 30, 30, 30],realisasi:[25.05, 25.76, 24.59, 24.64, 22.83, 23.46, 23.39, 23.37],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"6c",name:"Success Rate Auto Dispatch Gangguan Individual (diluar Clear Tamper)",sat:"%",bob:2,grp:false,
        target:[2, 2, 2, 2, 2, 2, 10, 10],realisasi:[20.77, 22.31, 18.48, 14.68, 14.13, 12.95, 14.23, 15.12],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+      {no:"6d",name:"Total Kali Transaksi Keuangan di PLN Mobile (seluruh Pelanggan PLN)",sat:"Ribuan Kali Transaksi",bob:1.2,grp:false,
+       target:[1015.9027, 2031.8054, 3047.708, 4063.6107, 5079.5134, 6095.4161, 7285.3324, 8475.2487],realisasi:[1207, 2298, 3891, 6518, 9007, 11744, 15008, 19566],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32]},
+      {no:"6e",name:"Total Rupiah Transaksi di PLN Mobile",sat:"Rp Miliar",bob:0.8,grp:false,
+       target:[0.1398, 0.2797, 0.5594, 0.6293, 0.839, 1.0488, 1.2609, 1.473],realisasi:[0.0966, 0.2805, 0.5171, 0.741, 1.02, 1.3885, 1.826, 2.172],pencapaian:[69.07, 100.3, 92.44, 110, 110, 110, 110, 110],nilai100:[0.56, 0.81, 0.74, 0.88, 0.88, 0.88, 0.88, 0.88]},
       {no:"7",name:"Keandalan JTM",sat:"",bob:7,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7, 7.7]},
       {no:"7a",name:"Gangguan TM (sesuai kewenangan)",sat:"kali",bob:5,grp:false,
@@ -1482,7 +1534,7 @@ const ulpData = {
       {no:"9a",name:"Pencapaian Saldo Rata-Rata Akhir Bulan diluar Konsumen Instansi (Kementerian dan Lembaga) dan Konsumen TT",sat:"Rp Juta",bob:2,grp:false,
        target:[8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64, 8.64],realisasi:[0, 0, 0, 0, 0, 0, 0, 0],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9b",name:"Pencapaian Pelunasan PRR, Ex-PRR, dan Piutang Prabayar",sat:"Rp Juta",bob:2,grp:false,
-       target:[17.0887, 34.1774, 51.2661, 68.3547, 85.4434, 102.5321, 164.324, 176.68],realisasi:[0, 0, 0, 293.785, 293.785, 293.785, 293.785, 293.785],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:[17.0887, 34.1774, 51.2661, 68.3547, 85.4434, 102.5321, 164.324, 176.6823],realisasi:[0, 0, 0, 293.785, 293.785, 293.785, 293.785, 293.785],pencapaian:[0, 0, 0, 110, 110, 110, 110, 110],nilai100:[0, 0, 0, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"9c",name:"Usulan Penghapusan PRR",sat:"Sem I : Rp Miliar \nSem II : %",bob:2,grp:false,
        target:[0.01, 0.01, 0.01, 0.01, 0.01, 0.47, 100, 100],realisasi:[0.01, 0.01, 0.01, 0.01, 0.01, 0.47, 100, 100],pencapaian:[100, 100, 100, 100, 100, 100, 100, 100],nilai100:[2, 2, 2, 2, 2, 2, 2, 2]},
       {no:"10",name:"Pengelolaan Transaksi Energi",sat:"",bob:7,grp:true,
@@ -1492,13 +1544,21 @@ const ulpData = {
       {no:"10b",name:"Penyelesaian Ganti Meter",sat:"Unit",bob:2,grp:false,
        target:[284, 568, 852, 1136, 1420, 1704, 1988, 2272],realisasi:[288, 662, 952, 1375, 1747, 2240, 2609, 2832],pencapaian:[101.4, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.03, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"10c",name:"Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",sat:"%",bob:2,grp:false,
-       target:[null, null, null, null, null, null, null, null],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
+       target:["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],realisasi:[100, 100, 100, 100, 100, 100, 100, 100],pencapaian:[110, 110, 110, 110, 110, 110, 110, 110],nilai100:[2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2]},
       {no:"11",name:"Digitalisasi Aplikasi Korporat",sat:"",bob:4,grp:true,
        target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[4, 4, 4, 4, 4, 4, 4.16, 4.16]},
       {no:"11a",name:"Pengembangan Aset Distribusi",sat:"%",bob:2,grp:false,
        target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
       {no:"11b",name:"Efektivitas Pemeliharaan",sat:"%",bob:2,grp:false,
-       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]}
+       target:[100, 100, 100, 100, 100, 100, 100, 100],realisasi:[100, 100, 100, 100, 100, 100, 104, 104],pencapaian:[100, 100, 100, 100, 100, 100, 104, 104],nilai100:[2, 2, 2, 2, 2, 2, 2.08, 2.08]},
+      {no:"12",name:"Kepatuhan, Maturity Level dan Tata Kelola Perusahaan",sat:"",bob:null,grp:true,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12a",name:"Implementasi Maturity Level",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12b",name:"Kepatuhan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]},
+      {no:"12c",name:"Tata Kelola Perusahaan",sat:"",bob:"Max-3",grp:false,
+       target:[null, null, null, null, null, null, null, null],realisasi:[null, null, null, null, null, null, null, null],pencapaian:[null, null, null, null, null, null, null, null],nilai100:[null, null, null, null, null, null, null, null]}
     ]
   }
 };
@@ -1712,7 +1772,7 @@ function buildExecSummary() {
     { search: 'Percepatan Penyambungan',  label: 'Percepatan Penyambungan' },
     { search: 'Pelayanan Pelanggan',      label: 'Pelayanan Pelanggan' },
     { search: 'Keandalan JTM',            label: 'Keandalan JTM' },
-    { search: 'ERT Distribusi',           label: 'ERT Distribusi' },
+    { search: '(ERT) Distribusi',         label: 'ERT Distribusi' },
     { search: 'Management Cash In',       label: 'Management Cash In' },
     { search: 'Transaksi Energi',         label: 'Transaksi Energi' },
     { search: 'Digitalisasi',             label: 'Digitalisasi' },
@@ -1774,7 +1834,7 @@ function buildExecSummary() {
 // DATA
 // ============================================================
 const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus'];
-const nkoValues = [98.67, 97.83, 101.08, 100.18, 101.87, 103.55, 108.93, 108.58];
+const nkoValues = [98.67, 97.83, 101.08, 100.18, 101.87, 103.5473, 108.93, 108.58];
 
 // Structured KPI data per month index
 // idx 0=Januari, 1=Februari, 2=Maret, 3=April
@@ -1960,6 +2020,15 @@ const kpiData = [
     isGroup: false
   },
   {
+    name: "Total Rupiah Transaksi di PLN Mobile",
+    no: '6e', satuan: "Rp Miliar", bobot: 0.8,
+    target:     [2.491, 4.94, 7.413, 10.488, 14.113, 17.48, 21.195, 24.452],
+    realisasi:  [0.37, 1.33, 6.461, 13.708, 21.089, 29.949, 36.86, 44.216],
+    pencapaian: [14.85, 26.92, 87.15, 110, 110, 110, 110, 110],
+    nilai100:   [0.12, 0.22, 0.7, 0.88, 0.88, 0.88, 0.88, 0.88],
+    isGroup: false
+  },
+  {
     name: "Keandalan JTM",
     no: '7', satuan: "", bobot: 7,
     target:     [null, null, null, null, null, null, null, null],
@@ -2061,7 +2130,7 @@ const kpiData = [
   {
     name: "Pengendalian Penggunaan Anggaran Investasi sesuai RKAP",
     no: '10a', satuan: "%", bobot: 2,
-    target:     [null, null, null, null, null, null, null, null],
+    target:     ["95-100", "95-100", "95-100", "95-100", "95-100", "95-100", "95-100", "95-100"],
     realisasi:  [100, 100, 95, 95, 100, 95, 100, 97.5],
     pencapaian: [110, 110, 100, 100, 110, 100, 110, 105],
     nilai100:   [2.2, 2.2, 2, 2, 2.2, 2, 2.2, 2.1],
@@ -2089,7 +2158,7 @@ const kpiData = [
     name: "Pengelolaan Transaksi Energi",
     no: '11', satuan: "", bobot: 6,
     target:     [null, null, null, null, null, null, null, null],
-    realisasi:  [null, null, null, null, null, 5090, null, null],
+    realisasi:  [null, null, null, null, null, null, null, null],
     pencapaian: [null, null, null, null, null, null, null, null],
     nilai100:   [6.34, 6.57, 6.57, 6.6, 6.6, 6.6, 6.6, 6.6],
     isGroup: true
@@ -2115,7 +2184,7 @@ const kpiData = [
   {
     name: "Tindak Lanjut LBKB (Laporan Bulanan Kelainan Baca Meter)",
     no: '11c', satuan: "%", bobot: 1,
-    target:     [null, null, null, null, null, null, null, null],
+    target:     ["98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100", "98-100"],
     realisasi:  [100, 100, 100, 100, 100, 100, 100, 100],
     pencapaian: [110, 110, 110, 110, 110, 110, 110, 110],
     nilai100:   [1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
@@ -2159,7 +2228,7 @@ const kpiData = [
   },
   {
     name: "Implementasi Maturity Level",
-    no: '13a', satuan: "", bobot: null,
+    no: '13a', satuan: "", bobot: "Max-3",
     target:     [null, null, null, null, null, null, null, null],
     realisasi:  [null, null, null, null, null, null, null, null],
     pencapaian: [null, null, null, null, null, null, null, null],
@@ -2168,7 +2237,7 @@ const kpiData = [
   },
   {
     name: "Kepatuhan",
-    no: '13b', satuan: "", bobot: null,
+    no: '13b', satuan: "", bobot: "Max-3",
     target:     [null, null, null, null, null, null, null, null],
     realisasi:  [null, null, null, null, null, null, null, null],
     pencapaian: [null, null, null, null, null, null, null, null],
@@ -2177,7 +2246,7 @@ const kpiData = [
   },
   {
     name: "Tata Kelola Perusahaan",
-    no: '13c', satuan: "", bobot: null,
+    no: '13c', satuan: "", bobot: "Max-3",
     target:     [null, null, null, null, null, null, null, null],
     realisasi:  [null, null, null, null, null, null, null, null],
     pencapaian: [null, null, null, null, null, null, null, null],
@@ -2529,7 +2598,7 @@ function buildGauges(m) {
   grid.innerHTML = '';
 
   gaugeData.forEach(g => {
-    const fv = v => (v!==null && v!==undefined && !isNaN(v)) ? fmt(v,2) : '–';
+    const fv = v => typeof v === 'string' ? v : (v!==null && v!==undefined && !isNaN(v)) ? fmt(v,2) : '–';
     const card = document.createElement('div');
     card.className = 'speedo-card';
     card.innerHTML = `
@@ -2679,8 +2748,8 @@ function buildTable(m) {
       <td><span class="no-cell">${k.no}</span></td>
       <td><div class="kpi-name">${k.name}</div></td>
       <td>${k.satuan || '–'}</td>
-      <td>${k.bobot}</td>
-      <td>${tar !== null && !isNaN(tar) ? fmt(tar) : '–'}</td>
+      <td>${k.bobot ?? '–'}</td>
+      <td>${typeof tar === 'string' ? tar : (tar !== null && !isNaN(tar) ? fmt(tar) : '–')}</td>
       <td>${real !== null && !isNaN(real) ? fmt(real) : '–'}</td>
       <td>${pctStr}</td>
       <td style="color:var(--text);font-weight:600">${n100 !== null && !isNaN(n100) ? fmt(n100,2) : '–'}</td>
@@ -2728,7 +2797,7 @@ function buildSummaryCards(m) {
     .forEach(k => {
       const pct = k.pencapaian[m];
       const clr = pct < 50 ? '#ef4444' : pct < 80 ? '#f97316' : '#f59e0b';
-      const fv  = v => (v !== null && v !== undefined && !isNaN(v)) ? fmt(v,2) : '–';
+      const fv  = v => typeof v === 'string' ? v : (v !== null && v !== undefined && !isNaN(v)) ? fmt(v,2) : '–';
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="perhatian-item">
@@ -2845,6 +2914,11 @@ function init() {
   buildNKOChart();
   buildBobotChart();
   buildAllLineCharts();
+  // Sidebar NKO badges follow the latest month in the data
+  Object.keys(ulpData).forEach(k => {
+    const el = document.getElementById('badge-' + k);
+    if (el) el.textContent = ulpData[k].nko[months.length - 1].toFixed(2);
+  });
   setMonth(currentMonth);
 }
 
@@ -2871,6 +2945,14 @@ function selectExportMonth(m) {
   exportMonth = m;
   document.querySelectorAll('.export-month-btn').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.m) === m);
+  });
+  // NKO shown next to each unit follows the selected month
+  Object.keys(ulpData).forEach(k => {
+    const el = document.querySelector('#chk-' + k + ' ~ .eu-nko');
+    if (!el) return;
+    const v = ulpData[k].nko[m];
+    el.textContent = v.toFixed(2);
+    el.style.color = v >= 100 ? '#22c55e' : '#f59e0b';
   });
 }
 
@@ -3310,32 +3392,32 @@ async function startExport() {
       <div class="export-unit-row" onclick="toggleCheck('chk-up3')">
         <input type="checkbox" id="chk-up3" value="up3" checked>
         <label for="chk-up3">🏢 UP3 Masohi</label>
-        <span class="eu-nko" style="color:#22c55e">108.93</span>
+        <span class="eu-nko" style="color:#22c55e">108.58</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-masohi')">
         <input type="checkbox" id="chk-masohi" value="masohi" checked>
         <label for="chk-masohi">📍 ULP Masohi</label>
-        <span class="eu-nko" style="color:#22c55e">107.53</span>
+        <span class="eu-nko" style="color:#22c55e">107.56</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-kairatu')">
         <input type="checkbox" id="chk-kairatu" value="kairatu" checked>
         <label for="chk-kairatu">📍 ULP Kairatu</label>
-        <span class="eu-nko" style="color:#22c55e">107.22</span>
+        <span class="eu-nko" style="color:#22c55e">106.71</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-piru')">
         <input type="checkbox" id="chk-piru" value="piru" checked>
         <label for="chk-piru">📍 ULP Piru</label>
-        <span class="eu-nko" style="color:#22c55e">106.38</span>
+        <span class="eu-nko" style="color:#22c55e">106.14</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-kobisonta')">
         <input type="checkbox" id="chk-kobisonta" value="kobisonta" checked>
         <label for="chk-kobisonta">📍 ULP Kobisonta</label>
-        <span class="eu-nko" style="color:#22c55e">109.06</span>
+        <span class="eu-nko" style="color:#22c55e">108.56</span>
       </div>
       <div class="export-unit-row" onclick="toggleCheck('chk-bula')">
         <input type="checkbox" id="chk-bula" value="bula" checked>
         <label for="chk-bula">📍 ULP Bula</label>
-        <span class="eu-nko" style="color:#22c55e">108.26</span>
+        <span class="eu-nko" style="color:#22c55e">108.10</span>
       </div>
     </div>
 
